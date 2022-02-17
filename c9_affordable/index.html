@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/Central_9_Community_Boundary_1.js"></script>
+        <script src="data/TotalAffordableHousing_2.js"></script>
+        <script src="data/HOMEDevelopmentFund_3.js"></script>
+        <script src="data/HousingTrustFund_4.js"></script>
+        <script src="data/OleneWalkerHousingTrustFund_5.js"></script>
+        <script src="data/LIHTC_6.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[40.746712986437814,-111.90346496893932],[40.756521012371266,-111.88744094734935]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_ESRIGraylight_0');
+        map.getPane('pane_ESRIGraylight_0').style.zIndex = 400;
+        var layer_ESRIGraylight_0 = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRIGraylight_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRIGraylight_0;
+        map.addLayer(layer_ESRIGraylight_0);
+        function pop_Central_9_Community_Boundary_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AREA_ID'] !== null ? autolinker.link(feature.properties['AREA_ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMCOUNCIL'] !== null ? autolinker.link(feature.properties['COMCOUNCIL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['COMCOUNC_1'] !== null ? autolinker.link(feature.properties['COMCOUNC_1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Central_9_Community_Boundary_1_0() {
+            return {
+                pane: 'pane_Central_9_Community_Boundary_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Central_9_Community_Boundary_1');
+        map.getPane('pane_Central_9_Community_Boundary_1').style.zIndex = 401;
+        map.getPane('pane_Central_9_Community_Boundary_1').style['mix-blend-mode'] = 'normal';
+        var layer_Central_9_Community_Boundary_1 = new L.geoJson(json_Central_9_Community_Boundary_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Central_9_Community_Boundary_1',
+            layerName: 'layer_Central_9_Community_Boundary_1',
+            pane: 'pane_Central_9_Community_Boundary_1',
+            onEachFeature: pop_Central_9_Community_Boundary_1,
+            style: style_Central_9_Community_Boundary_1_0,
+        });
+        bounds_group.addLayer(layer_Central_9_Community_Boundary_1);
+        map.addLayer(layer_Central_9_Community_Boundary_1);
+        function pop_TotalAffordableHousing_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Unit</th>\
+                        <td>' + (feature.properties['Total Unit'] !== null ? autolinker.link(feature.properties['Total Unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Market Rat</th>\
+                        <td>' + (feature.properties['Market Rat'] !== null ? autolinker.link(feature.properties['Market Rat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Affordable</th>\
+                        <td>' + (feature.properties['Affordable'] !== null ? autolinker.link(feature.properties['Affordable'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_TotalAffordableHousing_2_0(feature) {
+            if (feature.properties['Total Unit'] >= 6.000000 && feature.properties['Total Unit'] <= 31.600000 ) {
+                return {
+                pane: 'pane_TotalAffordableHousing_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 31.600000 && feature.properties['Total Unit'] <= 57.200000 ) {
+                return {
+                pane: 'pane_TotalAffordableHousing_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 57.200000 && feature.properties['Total Unit'] <= 82.800000 ) {
+                return {
+                pane: 'pane_TotalAffordableHousing_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [45.599999999999994, 45.599999999999994]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 82.800000 && feature.properties['Total Unit'] <= 108.400000 ) {
+                return {
+                pane: 'pane_TotalAffordableHousing_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [53.199999999999996, 53.199999999999996]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 108.400000 && feature.properties['Total Unit'] <= 134.000000 ) {
+                return {
+                pane: 'pane_TotalAffordableHousing_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [60.8, 60.8]
+        }),
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_TotalAffordableHousing_2');
+        map.getPane('pane_TotalAffordableHousing_2').style.zIndex = 402;
+        map.getPane('pane_TotalAffordableHousing_2').style['mix-blend-mode'] = 'normal';
+        var layer_TotalAffordableHousing_2 = new L.geoJson(json_TotalAffordableHousing_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_TotalAffordableHousing_2',
+            layerName: 'layer_TotalAffordableHousing_2',
+            pane: 'pane_TotalAffordableHousing_2',
+            onEachFeature: pop_TotalAffordableHousing_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_TotalAffordableHousing_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_TotalAffordableHousing_2);
+        map.addLayer(layer_TotalAffordableHousing_2);
+        function pop_HOMEDevelopmentFund_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Unit</th>\
+                        <td>' + (feature.properties['Total Unit'] !== null ? autolinker.link(feature.properties['Total Unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Market Rat</th>\
+                        <td>' + (feature.properties['Market Rat'] !== null ? autolinker.link(feature.properties['Market Rat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Affordable</th>\
+                        <td>' + (feature.properties['Affordable'] !== null ? autolinker.link(feature.properties['Affordable'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_HOMEDevelopmentFund_3_0(feature) {
+            if (feature.properties['Total Unit'] >= 6.000000 && feature.properties['Total Unit'] <= 32.000000 ) {
+                return {
+                pane: 'pane_HOMEDevelopmentFund_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 32.000000 && feature.properties['Total Unit'] <= 57.000000 ) {
+                return {
+                pane: 'pane_HOMEDevelopmentFund_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 57.000000 && feature.properties['Total Unit'] <= 83.000000 ) {
+                return {
+                pane: 'pane_HOMEDevelopmentFund_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [45.599999999999994, 45.599999999999994]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 83.000000 && feature.properties['Total Unit'] <= 108.000000 ) {
+                return {
+                pane: 'pane_HOMEDevelopmentFund_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [53.199999999999996, 53.199999999999996]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 108.000000 && feature.properties['Total Unit'] <= 134.000000 ) {
+                return {
+                pane: 'pane_HOMEDevelopmentFund_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [60.8, 60.8]
+        }),
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_HOMEDevelopmentFund_3');
+        map.getPane('pane_HOMEDevelopmentFund_3').style.zIndex = 403;
+        map.getPane('pane_HOMEDevelopmentFund_3').style['mix-blend-mode'] = 'normal';
+        var layer_HOMEDevelopmentFund_3 = new L.geoJson(json_HOMEDevelopmentFund_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_HOMEDevelopmentFund_3',
+            layerName: 'layer_HOMEDevelopmentFund_3',
+            pane: 'pane_HOMEDevelopmentFund_3',
+            onEachFeature: pop_HOMEDevelopmentFund_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_HOMEDevelopmentFund_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_HOMEDevelopmentFund_3);
+        map.addLayer(layer_HOMEDevelopmentFund_3);
+        function pop_HousingTrustFund_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Unit</th>\
+                        <td>' + (feature.properties['Total Unit'] !== null ? autolinker.link(feature.properties['Total Unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Market Rat</th>\
+                        <td>' + (feature.properties['Market Rat'] !== null ? autolinker.link(feature.properties['Market Rat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Affordable</th>\
+                        <td>' + (feature.properties['Affordable'] !== null ? autolinker.link(feature.properties['Affordable'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_HousingTrustFund_4_0(feature) {
+            if (feature.properties['Total Unit'] >= 6.000000 && feature.properties['Total Unit'] <= 32.000000 ) {
+                return {
+                pane: 'pane_HousingTrustFund_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 32.000000 && feature.properties['Total Unit'] <= 57.000000 ) {
+                return {
+                pane: 'pane_HousingTrustFund_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 57.000000 && feature.properties['Total Unit'] <= 83.000000 ) {
+                return {
+                pane: 'pane_HousingTrustFund_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [45.599999999999994, 45.599999999999994]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 83.000000 && feature.properties['Total Unit'] <= 108.000000 ) {
+                return {
+                pane: 'pane_HousingTrustFund_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [53.199999999999996, 53.199999999999996]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 108.000000 && feature.properties['Total Unit'] <= 134.000000 ) {
+                return {
+                pane: 'pane_HousingTrustFund_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [60.8, 60.8]
+        }),
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_HousingTrustFund_4');
+        map.getPane('pane_HousingTrustFund_4').style.zIndex = 404;
+        map.getPane('pane_HousingTrustFund_4').style['mix-blend-mode'] = 'normal';
+        var layer_HousingTrustFund_4 = new L.geoJson(json_HousingTrustFund_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_HousingTrustFund_4',
+            layerName: 'layer_HousingTrustFund_4',
+            pane: 'pane_HousingTrustFund_4',
+            onEachFeature: pop_HousingTrustFund_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_HousingTrustFund_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_HousingTrustFund_4);
+        map.addLayer(layer_HousingTrustFund_4);
+        function pop_OleneWalkerHousingTrustFund_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Unit</th>\
+                        <td>' + (feature.properties['Total Unit'] !== null ? autolinker.link(feature.properties['Total Unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Market Rat</th>\
+                        <td>' + (feature.properties['Market Rat'] !== null ? autolinker.link(feature.properties['Market Rat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Affordable</th>\
+                        <td>' + (feature.properties['Affordable'] !== null ? autolinker.link(feature.properties['Affordable'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_OleneWalkerHousingTrustFund_5_0(feature) {
+            if (feature.properties['Total Unit'] >= 6.000000 && feature.properties['Total Unit'] <= 32.000000 ) {
+                return {
+                pane: 'pane_OleneWalkerHousingTrustFund_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 32.000000 && feature.properties['Total Unit'] <= 57.000000 ) {
+                return {
+                pane: 'pane_OleneWalkerHousingTrustFund_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 57.000000 && feature.properties['Total Unit'] <= 83.000000 ) {
+                return {
+                pane: 'pane_OleneWalkerHousingTrustFund_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [45.599999999999994, 45.599999999999994]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 83.000000 && feature.properties['Total Unit'] <= 108.000000 ) {
+                return {
+                pane: 'pane_OleneWalkerHousingTrustFund_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [53.199999999999996, 53.199999999999996]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 108.000000 && feature.properties['Total Unit'] <= 134.000000 ) {
+                return {
+                pane: 'pane_OleneWalkerHousingTrustFund_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [60.8, 60.8]
+        }),
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_OleneWalkerHousingTrustFund_5');
+        map.getPane('pane_OleneWalkerHousingTrustFund_5').style.zIndex = 405;
+        map.getPane('pane_OleneWalkerHousingTrustFund_5').style['mix-blend-mode'] = 'normal';
+        var layer_OleneWalkerHousingTrustFund_5 = new L.geoJson(json_OleneWalkerHousingTrustFund_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_OleneWalkerHousingTrustFund_5',
+            layerName: 'layer_OleneWalkerHousingTrustFund_5',
+            pane: 'pane_OleneWalkerHousingTrustFund_5',
+            onEachFeature: pop_OleneWalkerHousingTrustFund_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_OleneWalkerHousingTrustFund_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_OleneWalkerHousingTrustFund_5);
+        map.addLayer(layer_OleneWalkerHousingTrustFund_5);
+        function pop_LIHTC_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Unit</th>\
+                        <td>' + (feature.properties['Total Unit'] !== null ? autolinker.link(feature.properties['Total Unit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Market Rat</th>\
+                        <td>' + (feature.properties['Market Rat'] !== null ? autolinker.link(feature.properties['Market Rat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Affordable</th>\
+                        <td>' + (feature.properties['Affordable'] !== null ? autolinker.link(feature.properties['Affordable'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_LIHTC_6_0(feature) {
+            if (feature.properties['Total Unit'] >= 6.000000 && feature.properties['Total Unit'] <= 32.000000 ) {
+                return {
+                pane: 'pane_LIHTC_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [30.4, 30.4]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 32.000000 && feature.properties['Total Unit'] <= 57.000000 ) {
+                return {
+                pane: 'pane_LIHTC_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 57.000000 && feature.properties['Total Unit'] <= 83.000000 ) {
+                return {
+                pane: 'pane_LIHTC_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [45.599999999999994, 45.599999999999994]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 83.000000 && feature.properties['Total Unit'] <= 108.000000 ) {
+                return {
+                pane: 'pane_LIHTC_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [53.199999999999996, 53.199999999999996]
+        }),
+                interactive: true,
+            }
+            }
+            if (feature.properties['Total Unit'] >= 108.000000 && feature.properties['Total Unit'] <= 134.000000 ) {
+                return {
+                pane: 'pane_LIHTC_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/accommodation_house.svg',
+            iconSize: [60.8, 60.8]
+        }),
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_LIHTC_6');
+        map.getPane('pane_LIHTC_6').style.zIndex = 406;
+        map.getPane('pane_LIHTC_6').style['mix-blend-mode'] = 'normal';
+        var layer_LIHTC_6 = new L.geoJson(json_LIHTC_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LIHTC_6',
+            layerName: 'layer_LIHTC_6',
+            pane: 'pane_LIHTC_6',
+            onEachFeature: pop_LIHTC_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_LIHTC_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_LIHTC_6);
+        map.addLayer(layer_LIHTC_6);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'LIHTC<br /><table><tr><td style="text-align: center;"><img src="legend/LIHTC_6_6320.png" /></td><td>6 - 32</td></tr><tr><td style="text-align: center;"><img src="legend/LIHTC_6_32571.png" /></td><td>32 - 57</td></tr><tr><td style="text-align: center;"><img src="legend/LIHTC_6_57832.png" /></td><td>57 - 83</td></tr><tr><td style="text-align: center;"><img src="legend/LIHTC_6_831083.png" /></td><td>83 - 108</td></tr><tr><td style="text-align: center;"><img src="legend/LIHTC_6_1081344.png" /></td><td>108 - 134</td></tr></table>': layer_LIHTC_6,'Olene Walker Housing Trust Fund<br /><table><tr><td style="text-align: center;"><img src="legend/OleneWalkerHousingTrustFund_5_6320.png" /></td><td>6 - 32</td></tr><tr><td style="text-align: center;"><img src="legend/OleneWalkerHousingTrustFund_5_32571.png" /></td><td>32 - 57</td></tr><tr><td style="text-align: center;"><img src="legend/OleneWalkerHousingTrustFund_5_57832.png" /></td><td>57 - 83</td></tr><tr><td style="text-align: center;"><img src="legend/OleneWalkerHousingTrustFund_5_831083.png" /></td><td>83 - 108</td></tr><tr><td style="text-align: center;"><img src="legend/OleneWalkerHousingTrustFund_5_1081344.png" /></td><td>108 - 134</td></tr></table>': layer_OleneWalkerHousingTrustFund_5,'Housing Trust Fund<br /><table><tr><td style="text-align: center;"><img src="legend/HousingTrustFund_4_6320.png" /></td><td>6 - 32</td></tr><tr><td style="text-align: center;"><img src="legend/HousingTrustFund_4_32571.png" /></td><td>32 - 57</td></tr><tr><td style="text-align: center;"><img src="legend/HousingTrustFund_4_57832.png" /></td><td>57 - 83</td></tr><tr><td style="text-align: center;"><img src="legend/HousingTrustFund_4_831083.png" /></td><td>83 - 108</td></tr><tr><td style="text-align: center;"><img src="legend/HousingTrustFund_4_1081344.png" /></td><td>108 - 134</td></tr></table>': layer_HousingTrustFund_4,'HOME Development Fund<br /><table><tr><td style="text-align: center;"><img src="legend/HOMEDevelopmentFund_3_6320.png" /></td><td>6 - 32</td></tr><tr><td style="text-align: center;"><img src="legend/HOMEDevelopmentFund_3_32571.png" /></td><td>32 - 57</td></tr><tr><td style="text-align: center;"><img src="legend/HOMEDevelopmentFund_3_57832.png" /></td><td>57 - 83</td></tr><tr><td style="text-align: center;"><img src="legend/HOMEDevelopmentFund_3_831083.png" /></td><td>83 - 108</td></tr><tr><td style="text-align: center;"><img src="legend/HOMEDevelopmentFund_3_1081344.png" /></td><td>108 - 134</td></tr></table>': layer_HOMEDevelopmentFund_3,'Total Affordable Housing<br /><table><tr><td style="text-align: center;"><img src="legend/TotalAffordableHousing_2_6320.png" /></td><td>6 - 32</td></tr><tr><td style="text-align: center;"><img src="legend/TotalAffordableHousing_2_32571.png" /></td><td>32 - 57</td></tr><tr><td style="text-align: center;"><img src="legend/TotalAffordableHousing_2_57832.png" /></td><td>57 - 83</td></tr><tr><td style="text-align: center;"><img src="legend/TotalAffordableHousing_2_831083.png" /></td><td>83 - 108</td></tr><tr><td style="text-align: center;"><img src="legend/TotalAffordableHousing_2_1081344.png" /></td><td>108 - 134</td></tr></table>': layer_TotalAffordableHousing_2,'<img src="legend/Central_9_Community_Boundary_1.png" /> Central_9_Community_Boundary': layer_Central_9_Community_Boundary_1,"ESRI Gray (light)": layer_ESRIGraylight_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
