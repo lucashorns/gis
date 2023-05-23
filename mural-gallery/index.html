@@ -562,16 +562,16 @@
                         <td colspan="2"><img src="' + feature.properties['relative'] + '"></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><font-family: "arial black">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial black">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><font-family: "arial">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><font-family: "arial black">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><font-family: "arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
