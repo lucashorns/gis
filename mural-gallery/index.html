@@ -562,16 +562,16 @@
                         <td colspan="2"><img src="' + feature.properties['relative'] + '"></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><p style="font-family: arial black; color:#c92568; font-size: +2">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style="font-family: arial black; color:#c92568; font-size: +2">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><p style="font-family: arial; color:#097c56; font-size: +1">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style="font-family: arial; color:#097c56; font-size: +1">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><p style="font-family: arial black">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style="font-family: arial black">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2"><p style="font-family: arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style="font-family: arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
