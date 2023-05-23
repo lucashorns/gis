@@ -574,7 +574,7 @@
                         <td colspan="2"><font face= "arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                 </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
+            layer.bindPopup(popupContent, {maxHeight: 400} {maxWidth: 600});
         }
 
         function style_Murals_4_0() {
