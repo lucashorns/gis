@@ -47,7 +47,7 @@
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
             map.locate({setView: true, watch: false}) /* This will return map so you can do chaining */
         .on('locationfound', function(e){
-            var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here :)');
+            var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here');
             map.addLayer(marker);
             map.addLayer(circle);
         })
