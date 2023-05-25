@@ -42,26 +42,28 @@
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
-        L.control.locate().addTo(map);
+    map.locate({setView: true, watch: true}) /* This will return map so you can do chaining */
+        .on('locationfound', function(e){
+            var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here :)');
+            var circle = L.circle([e.latitude, e.longitude], e.accuracy/2, {
+                weight: 1,
+                color: 'blue',
+                fillColor: '#cacaca',
+                fillOpacity: 0.2
+            });
+            map.addLayer(marker);
+            map.addLayer(circle);
+        })
+       .on('locationerror', function(e){
+            console.log(e);
+            alert("Location access denied.");
+        });
         function setBounds() {
         }
         map.createPane('pane_Whites_0');
         map.getPane('pane_Whites_0').style.zIndex = 400;
         map.on('contextmenu', function (e) {
             L.marker(e.latlng).addTo(map).bindPopup(e.latlng.toString());
-        })
-        map.on('keypress', function (e) {
-            if (e.originalEvent.key = 'l'){
-                map.locate()
-            }
-        });
-        map.on('locationfound', function (e) {
-            L.circlemarker(e.latlng).addTo(map);
-            map.setView(e.latlng, 14);
-        });
-            
-        map.on('locationerror', function (e) {
-            alert("location not found")
         })
         var layer_Whites_0 = L.tileLayer('https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i646385893!3m17!2sen!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjF8cC52Om9mZixzLnQ6MXxzLmU6bC50LmZ8cC5jOiM0NDQ0NDQscy50OjV8cC5jOiNmZmZmZmZ8cC52Om9uLHMudDoyfHAudjpvZmYscy50OjN8cC5zOi0xMDB8cC5sOjQ1LHMudDo0OXxwLnY6c2ltcGxpZmllZCxzLnQ6NDl8cy5lOmcuZnxwLmM6I2NlY2VjZXxwLnY6b24scy50OjQ5fHMuZTpnLnN8cC52Om9mZixzLnQ6NTB8cy5lOmcuZnxwLmM6I2UyZTJlMixzLnQ6NTB8cy5lOmcuc3xwLnY6b2ZmLHMudDo1MHxzLmU6bC50LmZ8cC5jOiNiY2JjYmMscy50OjUwfHMuZTpsLnQuc3xwLmM6I2ZmZmZmZnxwLnY6b258cC5nOjAuMDAscy50OjUwfHMuZTpsLml8cC52Om9mZixzLnQ6NTF8cy5lOmcuZnxwLmM6I2UyZTJlMixzLnQ6NTF8cy5lOmcuc3xwLnY6b2ZmLHMudDo1MXxzLmU6bC50fHAuYzojYzljOWM5LHMudDo1MXxzLmU6bC50LmZ8cC5jOiNiY2JjYmN8cC5sOjAscy50OjUxfHMuZTpsLnQuc3xwLmM6I2ZmZmZmZixzLnQ6NHxwLnY6b2ZmLHMudDo2fHAuYzojNDZiY2VjfHAudjpvZmY!4e0', {
             pane: 'pane_Whites_0',
