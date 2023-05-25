@@ -576,16 +576,7 @@
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
-    navigator.geolocation.watchPosition(success, error);
-    function success(pos) {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    const accuracy = pos.coords.accuracy;
-    L.marker([lat, lng]).addTo(map);
-    }
-            function error(err) {
-                if (err.code === 1) {
-                    alert("Please allow geolocation access");
+            
         function style_Murals_4_0() {
             return {
                 pane: 'pane_Murals_4',
