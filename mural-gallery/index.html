@@ -45,6 +45,16 @@
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+            map.locate({setView: true, watch: false}) /* This will return map so you can do chaining */
+        .on('locationfound', function(e){
+            var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here :)');
+            map.addLayer(marker);
+            map.addLayer(circle);
+        })
+       .on('locationerror', function(e){
+            console.log(e);
+            alert("Location not found");
+        });
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
@@ -625,7 +635,7 @@
                 pane: 'pane_WalkingRoute_4',
                 opacity: 1,
                 color: 'rgba(9,124,86,1.0)',
-                dashArray: '',
+                dashArray: '10, 20',
                 lineCap: 'butt',
                 lineJoin: 'round',
                 weight: 7.0,
@@ -650,19 +660,19 @@
         function pop_Murals_5(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style> img {max-width: 100%; height: auto;}</style><img src="' + feature.properties['relative'] + '" alt="" height="150" width="290"></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" b size= "+2" color= "#c92568">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+1" color= "#097c56">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" b>' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['relative'] !== null ? autolinker.link(feature.properties['relative'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
@@ -703,7 +713,7 @@
         function pop_ArtVenues_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+2" color= "#ffba0d">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
@@ -744,7 +754,7 @@
         function pop_BreweriesDistilleries_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+2" color= "#ffba0d">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
@@ -785,7 +795,7 @@
         function pop_food_8(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+2" color= "#ffba0d">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
