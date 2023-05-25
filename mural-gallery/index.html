@@ -19,27 +19,7 @@
         <title></title>
     </head>
     <body>
-        <div id="map">
-        </div>
-        <script src="js/qgis2web_expressions.js"></script>
-        <script src="js/leaflet.js"></script>
-        <script src="js/leaflet.rotatedMarker.js"></script>
-        <script src="js/leaflet.pattern.js"></script>
-        <script src="js/leaflet-hash.js"></script>
-        <script src="js/Autolinker.min.js"></script>
-        <script src="js/rbush.min.js"></script>
-        <script src="js/labelgun.min.js"></script>
-        <script src="js/labels.js"></script>
-        <script src="data/BuildingFootprints_1.js"></script>
-        <script src="data/LightRailLines_2.js"></script>
-        <script src="data/Stations_3.js"></script>
-        <script src="data/WalkingRoute_4.js"></script>
-        <script src="data/Murals_5.js"></script>
-        <script src="data/ArtVenues_6.js"></script>
-        <script src="data/BreweriesDistilleries_7.js"></script>
-        <script src="data/food_8.js"></script>
-        <script>
-        <div class=”popup”>
+         <div class=”popup”>
 </div>
 *,
 *:before,
@@ -64,6 +44,26 @@ body{
     font-family: “Poppins”,sans-serif;
     text-align: center;
 }
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/BuildingFootprints_1.js"></script>
+        <script src="data/LightRailLines_2.js"></script>
+        <script src="data/Stations_3.js"></script>
+        <script src="data/WalkingRoute_4.js"></script>
+        <script src="data/Murals_5.js"></script>
+        <script src="data/ArtVenues_6.js"></script>
+        <script src="data/BreweriesDistilleries_7.js"></script>
+        <script src="data/food_8.js"></script>
+        <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
         }).fitBounds([[40.71356236658016,-111.90831885983422],[40.72626211286899,-111.88166730593314]]);
