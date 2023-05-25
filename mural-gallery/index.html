@@ -42,15 +42,9 @@
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
-    map.locate({setView: true, watch: true}) /* This will return map so you can do chaining */
+    map.locate({setView: true, watch: false}) /* This will return map so you can do chaining */
         .on('locationfound', function(e){
             var marker = L.marker([e.latitude, e.longitude]).bindPopup('Your are here :)');
-            var circle = L.circle([e.latitude, e.longitude], e.accuracy/2, {
-                weight: 1,
-                color: 'blue',
-                fillColor: '#cacaca',
-                fillOpacity: 0.2
-            });
             map.addLayer(marker);
             map.addLayer(circle);
         })
