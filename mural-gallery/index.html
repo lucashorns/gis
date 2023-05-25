@@ -59,6 +59,7 @@
         map.on('contextmenu', function (e) {
             L.marker(e.latlng).addTo(map).bindPopup(e.latlng.toString());
         })
+        L.control.title('<h1>Mural Gallery</h1>').addTo(map);
         var layer_Whites_0 = L.tileLayer('https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i646385893!3m17!2sen!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjF8cC52Om9mZixzLnQ6MXxzLmU6bC50LmZ8cC5jOiM0NDQ0NDQscy50OjV8cC5jOiNmZmZmZmZ8cC52Om9uLHMudDoyfHAudjpvZmYscy50OjN8cC5zOi0xMDB8cC5sOjQ1LHMudDo0OXxwLnY6c2ltcGxpZmllZCxzLnQ6NDl8cy5lOmcuZnxwLmM6I2NlY2VjZXxwLnY6b24scy50OjQ5fHMuZTpnLnN8cC52Om9mZixzLnQ6NTB8cy5lOmcuZnxwLmM6I2UyZTJlMixzLnQ6NTB8cy5lOmcuc3xwLnY6b2ZmLHMudDo1MHxzLmU6bC50LmZ8cC5jOiNiY2JjYmMscy50OjUwfHMuZTpsLnQuc3xwLmM6I2ZmZmZmZnxwLnY6b258cC5nOjAuMDAscy50OjUwfHMuZTpsLml8cC52Om9mZixzLnQ6NTF8cy5lOmcuZnxwLmM6I2UyZTJlMixzLnQ6NTF8cy5lOmcuc3xwLnY6b2ZmLHMudDo1MXxzLmU6bC50fHAuYzojYzljOWM5LHMudDo1MXxzLmU6bC50LmZ8cC5jOiNiY2JjYmN8cC5sOjAscy50OjUxfHMuZTpsLnQuc3xwLmM6I2ZmZmZmZixzLnQ6NHxwLnY6b2ZmLHMudDo2fHAuYzojNDZiY2VjfHAudjpvZmY!4e0', {
             pane: 'pane_Whites_0',
             opacity: 1.0,
