@@ -576,7 +576,16 @@
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
-
+    navigator.geolocation.watchPosition(success, error);
+    function success(pos) {
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+    const accuracy = pos.coords.accuracy;
+    L.marker([lat, lng]).addTo(map);
+    }
+            function error(err) {
+                if (err.code === 1) {
+                    alert("Please allow geolocation access");
         function style_Murals_4_0() {
             return {
                 pane: 'pane_Murals_4',
@@ -653,23 +662,6 @@
         var baseMaps = {};
         L.control.layers(baseMaps,{'<img src="legend/Breweries_5.png" /> Breweries': layer_Breweries_5,'<img src="legend/Murals_4.png" /> Murals': layer_Murals_4,'<img src="legend/WalkingRoute_3.png" /> Walking Route': layer_WalkingRoute_3,'<img src="legend/Stations_2.png" /> Stations': layer_Stations_2,'<img src="legend/LightRailLines_1.png" /> Light Rail Lines': layer_LightRailLines_1,"Whites": layer_Whites_0,}).addTo(map);
         setBounds();
-            
-    navigator.geolocation.watchPosition(success, error);
-    
-    function success(pos) {
-    
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    const accuracy = pos.coords.accuracy;
-    
-    L.marker([lat, lng]).addTo(map);
-    }
-            function error(err) {
-                if (err.code === 1) {
-                    alert("Please allow geolocation access");
-        
         </script>
     </body>
-    
-
 </html>
