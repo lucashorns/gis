@@ -38,7 +38,6 @@
         <script src="data/ArtVenues_7.js"></script>
         <script src="data/Bars_8.js"></script>
         <script src="data/Food_9.js"></script>
-        <script src="data/Info_6.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
@@ -832,47 +831,6 @@
         });
         bounds_group.addLayer(layer_Food_9);
         map.addLayer(layer_Food_9);
-        function pop_Info_6(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                         <td colspan="2"><img src="photos/info-page.jpg" alt="" height="700" width="290"></td>\
-                    </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
-        }
-
-        function style_Info_6_0() {
-            return {
-                pane: 'pane_Info_6',
-        rotationAngle: 0.0,
-        rotationOrigin: 'center center',
-        icon: L.icon({
-            iconUrl: 'markers/Info.svg',
-            iconSize: [53.19999999999994, 53.19999999999994]
-        }),
-                interactive: true,
-            }
-        }
-        map.createPane('pane_Info_6');
-        map.getPane('pane_Info_6').style.zIndex = 406;
-        map.getPane('pane_Info_6').style['mix-blend-mode'] = 'normal';
-        var layer_Info_6 = new L.geoJson(json_Info_6, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_Info_6',
-            layerName: 'layer_Info_6',
-            pane: 'pane_Info_6',
-            onEachFeature: pop_Info_6,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.marker(latlng, style_Info_6_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_Info_6);
-        map.addLayer(layer_Info_6);
         var baseMaps = {};
         L.control.layers(baseMaps,{'<img src="symbols/splat.png" /> Murals': layer_Murals_5,'<img src="symbols/food.png" /> Restaurants': layer_Food_9,'<img src="symbols/beer.png" /> Breweries/Distilleries': layer_Bars_8,'<img src="symbols/art.png" /> Art & Music Venues': layer_ArtVenues_7,'<img src="legend/WalkingRoute_4.png" /> Walking/Biking Route': layer_WalkingRoute_4,}).addTo(map);
         setBounds();
