@@ -652,19 +652,19 @@
         function pop_Murals_5(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><style> img {max-width: 100%; height: auto;}</style><img src="' + feature.properties['relative'] + '" alt="" height="150" width="290"></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" b size= "+2" color= "#c92568">' + (feature.properties['Artist'] !== null ? autolinker.link(feature.properties['Artist'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+1" color= "#097c56">' + (feature.properties['Year'] !== null ? autolinker.link(feature.properties['Year'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" b>' + (feature.properties['Business'] !== null ? autolinker.link(feature.properties['Business'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['relative'] !== null ? autolinker.link(feature.properties['relative'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</font></td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
