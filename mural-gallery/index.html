@@ -702,47 +702,6 @@
         });
         bounds_group.addLayer(layer_Murals_5);
         map.addLayer(layer_Murals_5);
-        function pop_Info_6(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
-        }
-
-        function style_Info_6_0() {
-            return {
-                pane: 'pane_Info_6',
-        rotationAngle: 0.0,
-        rotationOrigin: 'center center',
-        icon: L.icon({
-            iconUrl: 'markers/Info.svg',
-            iconSize: [53.19999999999994, 53.19999999999994]
-        }),
-                interactive: true,
-            }
-        }
-        map.createPane('pane_Info_6');
-        map.getPane('pane_Info_6').style.zIndex = 406;
-        map.getPane('pane_Info_6').style['mix-blend-mode'] = 'normal';
-        var layer_Info_6 = new L.geoJson(json_Info_6, {
-            attribution: '',
-            interactive: true,
-            dataVar: 'json_Info_6',
-            layerName: 'layer_Info_6',
-            pane: 'pane_Info_6',
-            onEachFeature: pop_Info_6,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.marker(latlng, style_Info_6_0(feature));
-            },
-        });
-        bounds_group.addLayer(layer_Info_6);
-        map.addLayer(layer_Info_6);
         function pop_ArtVenues_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
@@ -866,6 +825,47 @@
         });
         bounds_group.addLayer(layer_Food_9);
         map.addLayer(layer_Food_9);
+        function pop_Info_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"> test ' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Info_6_0() {
+            return {
+                pane: 'pane_Info_6',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Info.svg',
+            iconSize: [53.19999999999994, 53.19999999999994]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Info_6');
+        map.getPane('pane_Info_6').style.zIndex = 406;
+        map.getPane('pane_Info_6').style['mix-blend-mode'] = 'normal';
+        var layer_Info_6 = new L.geoJson(json_Info_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Info_6',
+            layerName: 'layer_Info_6',
+            pane: 'pane_Info_6',
+            onEachFeature: pop_Info_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Info_6_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Info_6);
+        map.addLayer(layer_Info_6);
         var baseMaps = {};
         L.control.layers(baseMaps,{'<img src="legend/Food_9.png" /> Food': layer_Food_9,'<img src="legend/Bars_8.png" /> Bars': layer_Bars_8,'<img src="legend/ArtVenues_7.png" /> Art Venues': layer_ArtVenues_7,'<img src="legend/Info_6.png" /> Info': layer_Info_6,'<img src="legend/Murals_5.png" /> Murals': layer_Murals_5,'<img src="legend/WalkingRoute_4.png" /> Walking Route': layer_WalkingRoute_4,'<img src="legend/Stations_3.png" /> Stations': layer_Stations_3,'<img src="legend/LightRailLines_2.png" /> Light Rail Lines': layer_LightRailLines_2,'<img src="legend/BuildingFootprints_1.png" /> Building Footprints': layer_BuildingFootprints_1,"Whites": layer_Whites_0,}).addTo(map);
         setBounds();
