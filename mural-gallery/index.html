@@ -828,7 +828,7 @@
         function pop_Info_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2"> test ' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                        <td colspan="2"><font face= "arial" size= "+2" color= "#097c56" align= "center"><p>Welcome to the South Salt Lake Mural Gallery<p/>' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             layer.bindPopup(popupContent, {maxHeight: 400});
