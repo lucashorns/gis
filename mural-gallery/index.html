@@ -42,7 +42,7 @@
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
         }).fitBounds([[40.720525519219805,-111.89662291343872],[40.723982258473015,-111.88936822245806]]);
-        map.setView([40.722584, -111.893660], 19)
+        map.setView([40.722584, -111.893900], 19)
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -53,7 +53,7 @@
             iconAnchor: [20, 40],
             popupAnchor: [0, -41]
         });
-        L.marker([40.722397,-111.893660], {icon:infoIcon}).addTo(map).bindPopup('<img src="photos/info-page.jpg" alt="" height="700" width="300">', {maxHeight: 400}).openPopup();
+        L.marker([40.722397,-111.893900], {icon:infoIcon}).addTo(map).bindPopup('<img src="photos/info-page.jpg" alt="" height="700" width="300">', {maxHeight: 400}).openPopup();
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
