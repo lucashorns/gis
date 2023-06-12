@@ -35,7 +35,7 @@
         <script src="data/Stations_3.js"></script>
         <script src="data/WalkingRoute_4.js"></script>
         <script src="data/Murals_5.js"></script>
-        <script src="data/ArtVenues_7.js"></script>
+        <script src="data/ArtVenues_6.js"></script>
         <script src="data/Bars_8.js"></script>
         <script src="data/Food_9.js"></script>
         <script>
@@ -709,7 +709,7 @@
         });
         bounds_group.addLayer(layer_Murals_5);
         map.addLayer(layer_Murals_5);
-        function pop_ArtVenues_7(feature, layer) {
+        function pop_ArtVenues_6(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2"><font face= "arial" size= "+2" color= "#ffba0d">' + (feature.properties['Name'] !== null ? autolinker.link(feature.properties['Name'].toLocaleString()) : '') + '</td>\
@@ -718,9 +718,9 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_ArtVenues_7_0() {
+        function style_ArtVenues_6_0() {
             return {
-                pane: 'pane_ArtVenues_7',
+                pane: 'pane_ArtVenues_6',
         rotationAngle: 0.0,
         rotationOrigin: 'center center',
         icon: L.icon({
@@ -730,26 +730,26 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_ArtVenues_7');
-        map.getPane('pane_ArtVenues_7').style.zIndex = 407;
-        map.getPane('pane_ArtVenues_7').style['mix-blend-mode'] = 'normal';
-        var layer_ArtVenues_7 = new L.geoJson(json_ArtVenues_7, {
+        map.createPane('pane_ArtVenues_6');
+        map.getPane('pane_ArtVenues_6').style.zIndex = 406;
+        map.getPane('pane_ArtVenues_6').style['mix-blend-mode'] = 'normal';
+        var layer_ArtVenues_6 = new L.geoJson(json_ArtVenues_6, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_ArtVenues_7',
-            layerName: 'layer_ArtVenues_7',
-            pane: 'pane_ArtVenues_7',
-            onEachFeature: pop_ArtVenues_7,
+            dataVar: 'json_ArtVenues_6',
+            layerName: 'layer_ArtVenues_6',
+            pane: 'pane_ArtVenues_6',
+            onEachFeature: pop_ArtVenues_6,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.marker(latlng, style_ArtVenues_7_0(feature));
+                return L.marker(latlng, style_ArtVenues_6_0(feature));
             },
         });
-        bounds_group.addLayer(layer_ArtVenues_7);
-        map.addLayer(layer_ArtVenues_7);
+        bounds_group.addLayer(layer_ArtVenues_6);
+        map.addLayer(layer_ArtVenues_6);
         function pop_Bars_8(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
