@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Placer.ai Employee Alma Maters</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+   <style>
+        /* Style the popup window */
+        .popup-window {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 150px;
+            background-color: #5e63e5;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            z-index: 10;
+            display: none;
+            border-radius: 10px;
+        }
+
+        /* Style the popup window content */
+        .popup-window p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style the close button */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #e5e5e5;
+
+        }
+    </style>
+</head>
+<body>
+    <h1>Automatic Popup Window</h1>
+
+    <div class="popup-window">
+        <br><font face= "Arial Black" b  color= "#ffffff"><center>Placer.ai Employees' Alma Maters<br><br><font face= "Arial" color= "#fffff"><center>Map by Lucas Horns</center></font><br><font face= "Arial" size= "-1" color= "#e5e5e5" ><center>Data source: LinkedIn</center></font>
+        <a href="#" class="close-button">X</a>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const popupWindow = document.querySelector('.popup-window');
+            popupWindow.style.display = 'block';
+
+            const closeButton = document.querySelector('.close-button');
+            closeButton.addEventListener('click', () => {
+                popupWindow.style.display = 'none';
+            });
+        });
+    </script>
+    <style>
+      body { 
+        margin: 0; 
+        padding: 0; 
+      }
+
+      #map { 
+        position: absolute; 
+        top: 0; 
+        bottom: 0; 
+        width: 100%; 
+      }
+    </style>
+  </head>
+  <body>
+      <div id='map'>
+</div>
+    <script>
+    // The value for 'accessToken' begins with 'pk...'
+    mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXNob3JucyIsImEiOiJjbHBpazExYTQwMDZ1MmtxeHdrcnRzOXgwIn0.cmVzw9pzZAWbZaN5Nv_e5A'; 
+    const map = new mapboxgl.Map({
+      container: 'map',
+      // Replace YOUR_STYLE_URL with your style URL.
+      style: 'mapbox://styles/lucashorns/clpipw7ln00ch01qr304chqqu', 
+      center: [-36.282, 17.545],
+      zoom: 1.73
+    });
+
+    // Code from the next step will go here.
+/* 
+Add an event listener that runs
+  when a user clicks on the map element.
+*/
+map.on('click', (event) => {
+  // If the user clicked on one of your markers, get its information.
+  const features = map.queryRenderedFeatures(event.point, {
+    layers: ['placerai-employee-alma-maters'] // replace with your layer name
+  });
+
+map.on('mouseenter', 'placerai-employee-alma-maters', (e) => {
+// Change the cursor style as a UI indicator.
+map.getCanvas().style.cursor = 'pointer'
+});
+
+map.on('mouseleave', 'placerai-employee-alma-maters', () => {
+map.getCanvas().style.cursor = '';
+});
+
+  if (!features.length) {
+    return;
+  }
+  const feature = features[0];
+
+  // Code from the next step will go here.
+  /* 
+    Create a popup, specify its options 
+    and properties, and add it to the map.
+  */
+const popup = new mapboxgl.Popup({ offset: [0, -15] })
+  .setLngLat(feature.geometry.coordinates)
+  .setHTML(
+    `<font face= "Arial Black" b size= "+1" color= "#5e63e5">${feature.properties.University}</font><br><font face= "Arial Black" b color= "#ffbe5e">Number of Employees:</font><font face= "Arial Black" b color= "#4d4d4d"> ${feature.properties.Employees}</font>`
+  )
+  .addTo(map);
+});
+    </script>
+  </body>
+</html>
