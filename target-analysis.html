@@ -122,14 +122,14 @@ const popup = new mapboxgl.Popup({ offset: [0, -3] })
   .setLngLat(feature.geometry.coordinates)
   .setHTML(
     `<font face= "Arial Black" b size= "+3" color= "#cc0000">#${feature.properties.Rank}</font><font face= "Arial Black" b size= "+2" color= "#33333"> Store ${feature.properties.Store_ID}</font>
-    <br><font face= "Helvetica" b size= "+0.5" color= "#c79961"> 2022 Total Visits: </font><font face= "Helvetica" size= "+0.5" color= "#333333">${feature.properties.C_Visits}</font>
+    <br><font face= "Helvetica" b size= "+0.5" color= "#c1761a"> 2022 Total Visits: </font><font face= "Helvetica" size= "+0.5" color= "#333333">${feature.properties.C_Visits}</font>
     <br><font face= "Arial Black" b color= "#333333">Surrounding Community</font><font face= "Arial Black" b color= "#333333">*</font>
-    <br><font face= "Helvetica" b color= "#c79961"> Population: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_22Pop}</font>
-    <br><font face= "Helvetica" b color= "#c79961"> Median Age: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Age}</font>
-    <br><font face= "Helvetica" b color= "#c79961"> Average Household Income: </font><font face= "Helvetica" color= "#333333">$${feature.properties.C_Income}</font>
+    <br><font face= "Helvetica" b color= "#c1761a"> Population: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_22Pop}</font>
+    <br><font face= "Helvetica" b color= "#c1761a"> Median Age: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Age}</font>
+    <br><font face= "Helvetica" b color= "#c1761a"> Average Household Income: </font><font face= "Helvetica" color= "#333333">$${feature.properties.C_Income}</font>
     <br><font face= "Arial Black" b color= "#333333">Surrounding Roads</font><font face= "Arial Black" b color= "#333333">**</font>
-    <br><font face= "Helvetica" b color= "#c79961"> Busiest Road Type: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Road_Typ}</font>
-    <br><font face= "Helvetica" b color= "#c79961"> Busiest Road Volume: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Road_Vol}</font>`
+    <br><font face= "Helvetica" b color= "#c1761a"> Busiest Road Type: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Road_Typ}</font>
+    <br><font face= "Helvetica" b color= "#c1761a"> Busiest Road Volume: </font><font face= "Helvetica" color= "#333333">${feature.properties.C_Road_Vol}</font>`
   )
   .addTo(map);
 });
