@@ -764,14 +764,14 @@
         });
         bounds_group.addLayer(layer_Food_8);
         map.addLayer(layer_Food_8);
-                function pop_ArtandAleTrail_2(feature, layer) {
+                function pop_ArtandAleTrail_10(feature, layer) {
             
             layer.bindPopup('<img src="photos/artandale.png" alt="" width="150">', {maxHeight: 310});
         }
 
-        function style_ArtandAleTrail_2_0() {
+        function style_ArtandAleTrail_10_0() {
             return {
-                pane: 'pane_ArtandAleTrail_2',
+                pane: 'pane_ArtandAleTrail_10',
                 opacity: 0.9,
                 color: 'rgba(255,206,57,1.0)',
                 dashArray: '20,8',
@@ -782,20 +782,20 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_ArtandAleTrail_2');
-        map.getPane('pane_ArtandAleTrail_2').style.zIndex = 402;
-        map.getPane('pane_ArtandAleTrail_2').style['mix-blend-mode'] = 'normal';
-        var layer_ArtandAleTrail_2 = new L.geoJson(json_ArtandAleTrail_2, {
+        map.createPane('pane_ArtandAleTrail_10');
+        map.getPane('pane_ArtandAleTrail_10').style.zIndex = 402;
+        map.getPane('pane_ArtandAleTrail_10').style['mix-blend-mode'] = 'normal';
+        var layer_ArtandAleTrail_10 = new L.geoJson(json_ArtandAleTrail_10, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_ArtandAleTrail_2',
-            layerName: 'layer_ArtandAleTrail_2',
-            pane: 'pane_ArtandAleTrail_2',
-            onEachFeature: pop_ArtandAleTrail_2,
-            style: style_ArtandAleTrail_2_0,
+            dataVar: 'json_ArtandAleTrail_10',
+            layerName: 'layer_ArtandAleTrail_10',
+            pane: 'pane_ArtandAleTrail_10',
+            onEachFeature: pop_ArtandAleTrail_10,
+            style: style_ArtandAleTrail_10_0,
         });
-        bounds_group.addLayer(layer_ArtandAleTrail_2);
-        map.addLayer(layer_ArtandAleTrail_2);
+        bounds_group.addLayer(layer_ArtandAleTrail_10);
+        map.addLayer(layer_ArtandAleTrail_10);
         var baseMaps = {};
         L.control.layers(baseMaps,{'<img src="symbols/splat.png" /> Murals': layer_Murals_5,'<img src="symbols/food.png" /> Restaurants': layer_Food_9,'<img src="symbols/beer.png" /> Breweries/Distilleries': layer_Bars_8,'<img src="symbols/art.png" /> Art & Music Venues': layer_ArtVenues_7,'<img src="legend/ArtandAleTrail_10.png" /> Art and Ale Trail': layer_ArtandAleTrail_10,'<img src="legend/WalkingRoute2024_4.png" /> Walking/Biking Route': layer_WalkingRoute2024_4,}).addTo(map);
         setBounds();
