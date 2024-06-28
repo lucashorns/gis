@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <title>Line</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+   <style>
+
+    </style>
+</head>
+<body>
+    <style>
+      body { 
+        margin: 0; 
+        padding: 0; 
+      }
+
+      #map { 
+        position: absolute; 
+        top: 0; 
+        bottom: 0; 
+        width: 100%; 
+      }
+    </style>
+  </head>
+  <body>
+      <div id='map'>
+</div>
+    <script>
+    // The value for 'accessToken' begins with 'pk...'
+    mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXNob3JucyIsImEiOiJjbHBpazExYTQwMDZ1MmtxeHdrcnRzOXgwIn0.cmVzw9pzZAWbZaN5Nv_e5A'; 
+    const map = new mapboxgl.Map({
+      container: 'map',
+      // Replace YOUR_STYLE_URL with your style URL.
+      style: 'mapbox://styles/lucashorns/clxzc2xjs004601r19bwe00n8', 
+      center: [-111.914, 40.622],
+      zoom: 9.2
+    });
+
+    // Code from the next step will go here.
+/* 
+Add an event listener that runs
+  when a user clicks on the map element.
+*/
+map.on('click', (event) => {
+  // If the user clicked on one of your markers, get its information.
+  const features = map.queryRenderedFeatures(event.point, {
+    layers: ['placerai-employee-alma-maters'] // replace with your layer name
+  });
+
+map.on('mouseenter', 'placerai-employee-alma-maters', (e) => {
+// Change the cursor style as a UI indicator.
+map.getCanvas().style.cursor = 'pointer'
+});
+
+map.on('mouseleave', 'placerai-employee-alma-maters', () => {
+map.getCanvas().style.cursor = '';
+});
+
+  if (!features.length) {
+    return;
+  }
+  const feature = features[0];
+
+  // Code from the next step will go here.
+  /* 
+    Create a popup, specify its options 
+    and properties, and add it to the map.
+  */
+const popup = new mapboxgl.Popup({ offset: [0, -15] })
+  .setLngLat(feature.geometry.coordinates)
+  .setHTML(
+    `<font face= "Arial Black" b size= "+1" color= "#5e63e5">${feature.properties.University}</font><br><font face= "Arial Black" b color= "#ffbe5e">Number of Employees:</font><font face= "Arial Black" b color= "#4d4d4d"> ${feature.properties.Employees}</font>`
+  )
+  .addTo(map);
+});
+    </script>
+  </body>
+</html>
