@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SSL Construction Projects</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    #banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    color: #4d4d4d;
+    padding: 10px;
+    z-index: 1000;
+}
+
+#banner img {
+    height: 40px; /* Adjust as needed */
+    margin-right: 30px;
+}
+
+#banner-text {
+    display: flex;
+    align-items: center;
+}
+
+#bottom-right-logo {
+    position: absolute;
+    bottom: 20px;  /* Distance from the bottom */
+    right: 10px;   /* Distance from the right */
+    height: 60px;  /* Adjust the size as needed */
+    width: auto;   /* Maintain aspect ratio */
+}
+
+    #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 80px;
+        left: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #ffffff;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        text-align: center;
+    }
+
+    #menu a.disabled {
+    background-color: #ccc !important; /* Gray background */
+    color: #666 !important; /* Dim text */ 
+}
+
+/*    #menu a:last-child {
+        border: none;
+    }*/
+
+/*    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }*/
+
+        .mapboxgl-popup {
+        max-width: 400px;
+        font:
+            12px/20px 'Helvetica Neue',
+            Arial,
+            Helvetica,
+            sans-serif;
+    }
+
+#Private-Development {
+    background-color: #4daf4a; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Engineering {
+    background-color: #e41a1c; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Public-Works {
+    background-color: #984ea3; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Water {
+    background-color: #377eb8; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Streets {
+    background-color: #ff7f00; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#UTA {
+    background-color: #a65628; 
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Private-Development:hover {
+    background-color: #3d8b3b; 
+}
+
+#Engineering:hover {
+    background-color: #b61516; 
+}
+
+#Public-Works:hover {
+    background-color: #783d81; 
+}
+
+#Water:hover {
+    background-color: #2b6391; 
+}
+
+#Streets:hover {
+    background-color: #cc6600; 
+}
+
+#UTA:hover {
+    background-color: #7d411e; 
+}
+
+</style>
+
+<nav id="menu"></nav>
+<div id="banner">
+    <div id="banner-text">
+        <font face="Arial Black" size="+3" b>SSL Roadwork 2025</font>
+    </div>
+    <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
+</div>
+<div id="map"></div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXNob3JucyIsImEiOiJjbTZ6ZGtweWMwM2RzMnFvbWJ2NGVoNjU1In0.dU3kPMeYYDdlAowT1VonWQ';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/light-v11',
+        zoom: 12.3,
+        center: [-111.899, 40.709]
+    });
+
+// ----------- SSL Boundaries ------------------
+    map.on('load', () => {
+            map.addSource('SSL-Boundaries', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.1nf958w9'
+        });
+        map.addLayer({
+            'id': 'SSL-Boundaries',
+            'type': 'line',
+            'source': 'SSL-Boundaries',
+            'source-layer': 'SSLBoundaries-chf6ku',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#000000',
+                'line-width': 1
+            }
+        });
+
+
+// ----------- Water -------------------------
+        map.addSource('Water', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.dwv9fjb1'
+        });
+        map.addLayer({
+            'id': 'Water',
+            'type': 'line',
+            'source': 'Water',
+            'source-layer': 'Water-03fa9p',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#377eb8',
+                'line-width': 4
+            }
+        });
+
+// ----------- Streets -------------------------
+        map.addSource('Streets', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.640hce4p'
+        });
+        map.addLayer({
+            'id': 'Streets',
+            'type': 'line',
+            'source': 'Streets',
+            'source-layer': 'Streets-4k7vc1',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#ff7f00',
+                'line-width': 4
+            }
+        });
+
+// ----------- Engineering -------------------------
+        map.addSource('Engineering', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.8q362nwm'
+        });
+        map.addLayer({
+            'id': 'Engineering',
+            'type': 'line',
+            'source': 'Engineering',
+            'source-layer': 'Engineering-c5hju0',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#e41a1c',
+                'line-width': 4
+            }
+        });
+
+// ----------- Private Development ------------------
+        map.addSource('Private-Development', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.783hqsti'
+        });
+        map.addLayer({
+            'id': 'Private-Development',
+            'type': 'circle',
+            'source': 'Private-Development',
+            'layout': {
+                'visibility': 'visible'
+            },
+            'paint': {
+                'circle-radius': 5,
+                'circle-color': '#4daf4a'
+            },
+            'source-layer': 'Private_Developments_SHP-7l6ff4'
+        });
+
+// ----------- Public Works ------------------
+        map.addSource('Public-Works', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.0011dq1o'
+        });
+        map.addLayer({
+            'id': 'Public-Works',
+            'type': 'circle',
+            'source': 'Public-Works',
+            'layout': {
+                'visibility': 'visible'
+            },
+            'paint': {
+                'circle-radius': 5,
+                'circle-color': '#984ea3'
+            },
+            'source-layer': 'Public_Works-806lqq'
+        });
+
+// ----------- UTA -------------------------
+        map.addSource('UTA', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.06a3ygyz'
+        });
+        map.addLayer({
+            'id': 'UTA',
+            'type': 'line',
+            'source': 'UTA',
+            'source-layer': 'UTA-c82zoj',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#a65628',
+                'line-width': 4
+            }
+        });
+
+
+
+    });
+    // After the last frame rendered before the map enters an "idle" state.
+    map.on('idle', () => {
+        // If these two layers were not added to the map, abort
+        if (!map.getLayer('Engineering') || !map.getLayer('Private-Development')) {
+            return;
+        }
+
+        // Enumerate ids of the layers.
+        const toggleableLayerIds = ['Engineering', 'Public-Works', 'Water', 'Streets', 'UTA', 'Private-Development'];
+
+        // Set up the corresponding toggle button for each layer.
+        for (const id of toggleableLayerIds) {
+            // Skip layers that already have a button set up.
+            if (document.getElementById(id)) {
+                continue;
+            }
+
+            // Create a link.
+            const link = document.createElement('a');
+            const layerLabels = {"Private-Development": "Private Development",
+                                    "Engineering": "Engineering",
+                                        "Public-Works": "Public Works",
+                                            "Water": "Public Works - Water"}
+            link.id = id;
+            link.href = '#';
+            link.textContent = layerLabels[id] || id; // Use custom label if available, otherwise default to ID
+
+            link.className = 'active';
+
+            // Show or hide layer when the toggle is clicked.
+            link.onclick = function (e) {
+                const clickedLayer = this.id;
+                e.preventDefault();
+                e.stopPropagation();
+
+                const visibility = map.getLayoutProperty(
+                    clickedLayer,
+                    'visibility'
+                );
+
+                // Toggle layer visibility by changing the layout object's visibility property.
+                if (visibility === 'visible') {
+                    map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                    this.className = '';
+                    this.classList.add('disabled');
+                } else {
+                    this.className = 'active';
+                    map.setLayoutProperty(
+                        clickedLayer,
+                        'visibility',
+                        'visible'
+                    );
+                    this.classList.remove('disabled');
+                }
+            };
+
+            const layers = document.getElementById('menu');
+            layers.appendChild(link);
+        }
+
+
+// ------ popups -----------
+
+        //  ---------- Private Development ----------------
+
+                map.on('click', 'Private-Development', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(coordinates)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#4daf4a">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'Private-Development', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'Private-Development', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+
+        //  ---------- Engineering ----------------
+
+                map.on('click', 'Engineering', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(e.lngLat)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#e41a1c">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'Engineering', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'Engineering', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        //  ---------- Public Works ----------------
+
+                map.on('click', 'Public-Works', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(coordinates)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#984ea3">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'Public-Works', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'Public-Works', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        //  ---------- Water ----------------
+
+                map.on('click', 'Water', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(e.lngLat)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#377eb8">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'Water', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'Water', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        //  ---------- Streets ----------------
+
+                map.on('click', 'Streets', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(e.lngLat)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#ff7f00">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'Streets', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'Streets', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        //  ---------- UTA ----------------
+
+                map.on('click', 'UTA', (e) => {
+            // Copy coordinates array.
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const description = e.features[0].properties.Name;
+            const feature = e.features[0];
+
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+            }
+
+            new mapboxgl.Popup({
+                closeButton: false,
+
+            })
+                .setLngLat(e.lngLat)
+                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
+                            <br><font face= "Arial">${feature.properties.Address}</font>
+                            <br><font face= "Arial" color="#a65628">${feature.properties.Department}</font>`)
+                .addTo(map);
+        });
+
+        // Change the cursor to a pointer when the mouse is over the places layer.
+        map.on('mouseenter', 'UTA', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        map.on('mouseleave', 'UTA', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+
+    });
+</script>
+<img id="bottom-right-logo" src="https://lucashorns.github.io/gis/WatermarkCropped.png" alt="Bottom Right Logo">
+</body>
+</html>
