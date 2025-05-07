@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>SSL Construction Map 2025</title>
+<title>SSL Construction Map 2026</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tabletop@1.5.1/src/tabletop.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
 <style>
 body { margin: 0; padding: 0; }
@@ -189,15 +189,20 @@ body { margin: 0; padding: 0; }
         zoom: 12.3,
         center: [-111.899, 40.709]
     });
-const googleSheetURL = 'https://spreadsheets.google.com/feeds/list/12ejfhW2JxXRXoXyHJqowuikGse5qtCNrZQghvsgeC5w/od6/public/values?alt=json';
+  const googleSheetCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZToqFchm73U9DIhOr9TsgSTSvfveG59DBh4mXZATKs3UKj4e7yLiE-Ai7V2nMrlZivZZg7cvBUPWr/pub?gid=0&single=true&output=csv'; // Replace with your actual CSV export URL
 
-  Tabletop.init({
-    key: googleSheetURL,
-    callback: function(data) {
-      window.projectData = data;
-      console.log("Data loaded from Google Sheet:", window.projectData);
+  Papa.parse(googleSheetCSVURL, {
+    download: true,
+    header: true, // This tells Papa Parse that the first row contains column headers
+    dynamicTyping: true, // Optionally try to convert values to their numeric or boolean type
+    complete: function(results) {
+      window.projectData = results.data;
+      console.log("Data loaded from Google Sheet (Papa Parse):", window.projectData);
+      // Now you can use window.projectData to populate your map popups
     },
-    simpleSheet: false
+    error: function(error) {
+      console.error("Error fetching or parsing CSV:", error);
+    }
   });
 
 
