@@ -175,7 +175,7 @@ body { margin: 0; padding: 0; }
 <div id="banner">
     <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
     <div id="banner-text">
-        <font face="Arial Black" size="+2" b>Construction Map 2025</font>
+        <font face="Arial Black" size="+2" b>Construction Map 2026</font>
     </div>
 </div>
 <div id="map"></div>
@@ -446,7 +446,7 @@ body { margin: 0; padding: 0; }
                 .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
                             <br><font face= "Arial">${project.Address}</font>
                             <br><font face= "Arial" color="#4daf4a">${project.Department}</font>
-                             ${feature.properties.URL ? `<br><a href="${feature.properties.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
+                             ${project.properties.URL ? `<br><a href="${project.properties.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
