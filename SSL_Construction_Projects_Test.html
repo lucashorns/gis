@@ -193,12 +193,10 @@ body { margin: 0; padding: 0; }
 Tabletop.init({
   key: 'https://spreadsheets.google.com/feeds/list/12ejfhW2JxXRXoXyHJqowuikGse5qtCNrZQghvsgeC5w/od6/public/values?alt=json',
   callback: function(data) {
-    // Store your data for matching
     window.projectData = data;
-    console.log("Data loaded from Google Sheet:", window.projectData); // Add this for debugging
-    // You might need to adjust how you access the data here based on the JSON structure
+    console.log("Data loaded from Google Sheet:", window.projectData);
   },
-  simpleSheet: false // When using the 'list' feed, set simpleSheet to false to get the raw data
+  simpleSheet: false
 });
 
 
