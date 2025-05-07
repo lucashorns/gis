@@ -6,6 +6,8 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -187,6 +189,23 @@ body { margin: 0; padding: 0; }
         zoom: 12.3,
         center: [-111.899, 40.709]
     });
+  const googleSheetCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZToqFchm73U9DIhOr9TsgSTSvfveG59DBh4mXZATKs3UKj4e7yLiE-Ai7V2nMrlZivZZg7cvBUPWr/pub?gid=0&single=true&output=csv'; // Replace with your actual CSV export URL
+
+  Papa.parse(googleSheetCSVURL, {
+    download: true,
+    header: true, // This tells Papa Parse that the first row contains column headers
+    dynamicTyping: true, // Optionally try to convert values to their numeric or boolean type
+    complete: function(results) {
+      window.projectData = results.data;
+      console.log("Data loaded from Google Sheet (Papa Parse):", window.projectData);
+      // Now you can use window.projectData to populate your map popups
+    },
+    error: function(error) {
+      console.error("Error fetching or parsing CSV:", error);
+    }
+  });
+
+
 
 // ----------- SSL Boundaries ------------------
     map.on('load', () => {
@@ -214,13 +233,13 @@ body { margin: 0; padding: 0; }
 // ----------- Water -------------------------
         map.addSource('Water', {
             type: 'vector',
-            url: 'mapbox://lucashorns.7m7rj97s'
+            url: 'mapbox://lucashorns.6alhqc91'
         });
         map.addLayer({
             'id': 'Water',
             'type': 'line',
             'source': 'Water',
-            'source-layer': 'Water4-7mqcok',
+            'source-layer': 'Water2-bx2z1c',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -235,13 +254,13 @@ body { margin: 0; padding: 0; }
 // ----------- Streets -------------------------
         map.addSource('Streets', {
             type: 'vector',
-            url: 'mapbox://lucashorns.a502ov50'
+            url: 'mapbox://lucashorns.2pkx70fi'
         });
         map.addLayer({
             'id': 'Streets',
             'type': 'line',
             'source': 'Streets',
-            'source-layer': 'Streets2-0nocql',
+            'source-layer': 'Streets-4vsbw6',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -256,13 +275,13 @@ body { margin: 0; padding: 0; }
 // ----------- Engineering -------------------------
         map.addSource('Engineering', {
             type: 'vector',
-            url: 'mapbox://lucashorns.8q362nwm'
+            url: 'mapbox://lucashorns.68flohtm'
         });
         map.addLayer({
             'id': 'Engineering',
             'type': 'line',
             'source': 'Engineering',
-            'source-layer': 'Engineering-c5hju0',
+            'source-layer': 'Engineering-b4561f',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -277,7 +296,7 @@ body { margin: 0; padding: 0; }
 // ----------- Private Development ------------------
         map.addSource('Private-Development', {
             type: 'vector',
-            url: 'mapbox://lucashorns.783hqsti'
+            url: 'mapbox://lucashorns.8cem89ya'
         });
         map.addLayer({
             'id': 'Private-Development',
@@ -290,13 +309,13 @@ body { margin: 0; padding: 0; }
                 'circle-radius': 5,
                 'circle-color': '#4daf4a'
             },
-            'source-layer': 'Private_Developments_SHP-7l6ff4'
+            'source-layer': 'Private_Developments_SHP-0geiin'
         });
 
 // ----------- Public Works ------------------
         map.addSource('Public-Works', {
             type: 'vector',
-            url: 'mapbox://lucashorns.0011dq1o'
+            url: 'mapbox://lucashorns.c0scfnxg'
         });
         map.addLayer({
             'id': 'Public-Works',
@@ -309,19 +328,19 @@ body { margin: 0; padding: 0; }
                 'circle-radius': 5,
                 'circle-color': '#984ea3'
             },
-            'source-layer': 'Public_Works-806lqq'
+            'source-layer': 'Public_Works-8ziwwi'
         });
 
 // ----------- UTA -------------------------
         map.addSource('UTA', {
             type: 'vector',
-            url: 'mapbox://lucashorns.06a3ygyz'
+            url: 'mapbox://lucashorns.ajb4ex4l'
         });
         map.addLayer({
             'id': 'UTA',
             'type': 'line',
             'source': 'UTA',
-            'source-layer': 'UTA-c82zoj',
+            'source-layer': 'UTA-ajjfrj',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -401,11 +420,14 @@ body { margin: 0; padding: 0; }
 
         //  ---------- Private Development ----------------
 
+
                 map.on('click', 'Private-Development', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -421,9 +443,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(coordinates)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#4daf4a">${feature.properties.Department}</font>`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#4daf4a">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
@@ -443,8 +466,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Engineering', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -460,9 +485,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#e41a1c">${feature.properties.Department}</font>`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#e41a1c">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
@@ -481,8 +507,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Public-Works', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -498,9 +526,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(coordinates)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#984ea3">${feature.properties.Department}</font>`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#984ea3">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
@@ -519,8 +548,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Water', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -536,10 +567,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#377eb8">${feature.properties.Department}</font>
-                            ${feature.properties.URL ? `<br><a href="${feature.properties.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#377eb8">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
@@ -558,8 +589,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Streets', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -575,10 +608,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#ff7f00">${feature.properties.Department}</font>
-			    ${feature.properties.URL ? `<br><a href="${feature.properties.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#ff7f00">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
@@ -597,8 +630,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'UTA', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -614,9 +649,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${feature.properties.Name}</font>
-                            <br><font face= "Arial">${feature.properties.Address}</font>
-                            <br><font face= "Arial" color="#a65628">${feature.properties.Department}</font>`)
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+                            <br><font face= "Arial">${project.Address}</font>
+                            <br><font face= "Arial" color="#a65628">${project.Department}</font>
+                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
