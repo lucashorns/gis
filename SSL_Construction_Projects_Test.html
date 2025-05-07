@@ -175,7 +175,7 @@ body { margin: 0; padding: 0; }
 <div id="banner">
     <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
     <div id="banner-text">
-        <font face="Arial Black" size="+2" b>Construction Map '25</font>
+        <font face="Arial Black" size="+2" b>Construction Map 2025</font>
     </div>
 </div>
 <div id="map"></div>
@@ -466,8 +466,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Engineering', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -505,8 +507,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Public-Works', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -544,8 +548,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Water', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -583,8 +589,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'Streets', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
@@ -622,8 +630,10 @@ body { margin: 0; padding: 0; }
                 map.on('click', 'UTA', (e) => {
             // Copy coordinates array.
             const coordinates = e.features[0].geometry.coordinates.slice();
-            const description = e.features[0].properties.Name;
-            const feature = e.features[0];
+            // const description = e.features[0].properties.Name;
+            // const feature = e.features[0];
+            const id = e.features[0].properties.id;
+            const project = window.projectData.find(d => d.id === id);
 
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
