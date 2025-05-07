@@ -189,15 +189,16 @@ body { margin: 0; padding: 0; }
         zoom: 12.3,
         center: [-111.899, 40.709]
     });
+const googleSheetURL = 'https://spreadsheets.google.com/feeds/list/12ejfhW2JxXRXoXyHJqowuikGse5qtCNrZQghvsgeC5w/od6/public/values?alt=json';
 
-Tabletop.init({
-  key: 'https://spreadsheets.google.com/feeds/list/12ejfhW2JxXRXoXyHJqowuikGse5qtCNrZQghvsgeC5w/od6/public/values?alt=json',
-  callback: function(data) {
-    window.projectData = data;
-    console.log("Data loaded from Google Sheet:", window.projectData);
-  },
-  simpleSheet: false
-});
+  Tabletop.init({
+    key: googleSheetURL,
+    callback: function(data) {
+      window.projectData = data;
+      console.log("Data loaded from Google Sheet:", window.projectData);
+    },
+    simpleSheet: false
+  });
 
 
 
