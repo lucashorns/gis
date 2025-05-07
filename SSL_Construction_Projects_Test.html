@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>SSL Construction Map 2026</title>
+<title>SSL Construction Map 2025</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
@@ -175,7 +175,7 @@ body { margin: 0; padding: 0; }
 <div id="banner">
     <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
     <div id="banner-text">
-        <font face="Arial Black" size="+2" b>Construction Map 2026</font>
+        <font face="Arial Black" size="+2" b>Construction Map 2025</font>
     </div>
 </div>
 <div id="map"></div>
@@ -443,9 +443,10 @@ body { margin: 0; padding: 0; }
 
             })
                 .setLngLat(coordinates)
-                .setHTML(`<font face= "Arial Black" b>${project.name}</font>
+                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
                             <br><font face= "Arial">${project.Address}</font>
-                            <br><font face= "Arial" color="#4daf4a">${project.Department}</font>`)
+                            <br><font face= "Arial" color="#4daf4a">${project.Department}</font>
+                             ${feature.properties.URL ? `<br><a href="${feature.properties.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
                 .addTo(map);
         });
 
