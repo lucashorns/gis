@@ -254,13 +254,13 @@ body { margin: 0; padding: 0; }
 // ----------- Streets -------------------------
         map.addSource('Streets', {
             type: 'vector',
-            url: 'mapbox://lucashorns.2pkx70fi'
+            // url: 'mapbox://lucashorns.2pkx70fi'
         });
         map.addLayer({
             'id': 'Streets',
             'type': 'line',
             'source': 'Streets',
-            'source-layer': 'Streets-4vsbw6',
+            // 'source-layer': 'Streets-4vsbw6',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -275,13 +275,13 @@ body { margin: 0; padding: 0; }
 // ----------- Engineering -------------------------
         map.addSource('Engineering', {
             type: 'vector',
-            url: 'mapbox://lucashorns.68flohtm'
+            url: 'mapbox://lucashorns.48tgjkgd'
         });
         map.addLayer({
             'id': 'Engineering',
             'type': 'line',
             'source': 'Engineering',
-            'source-layer': 'Engineering-b4561f',
+            'source-layer': 'Engineering-5spg7d',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -296,7 +296,7 @@ body { margin: 0; padding: 0; }
 // ----------- Private Development ------------------
         map.addSource('Private-Development', {
             type: 'vector',
-            url: 'mapbox://lucashorns.8cem89ya'
+            url: 'mapbox://lucashorns.5t03j5vj'
         });
         map.addLayer({
             'id': 'Private-Development',
@@ -309,7 +309,7 @@ body { margin: 0; padding: 0; }
                 'circle-radius': 5,
                 'circle-color': '#4daf4a'
             },
-            'source-layer': 'Private_Developments_SHP-0geiin'
+            'source-layer': 'Private_Developments_SHP-3kbkux'
         });
 
 // ----------- Public Works ------------------
@@ -334,13 +334,13 @@ body { margin: 0; padding: 0; }
 // ----------- UTA -------------------------
         map.addSource('UTA', {
             type: 'vector',
-            url: 'mapbox://lucashorns.ajb4ex4l'
+            url: 'mapbox://lucashorns.1fcoeuel'
         });
         map.addLayer({
             'id': 'UTA',
             'type': 'line',
             'source': 'UTA',
-            'source-layer': 'UTA-ajjfrj',
+            'source-layer': 'UTA-3zycdi',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -377,7 +377,8 @@ body { margin: 0; padding: 0; }
             const layerLabels = {"Private-Development": "Private Development",
                                     "Engineering": "Engineering",
                                         "Public-Works": "Public Works",
-                                            "Water": "Public Works - Water"}
+                                            "Water": "Public Works - Water", 
+                                                "UTA": "UTA / UDOT"}
             link.id = id;
             link.href = '#';
             link.textContent = layerLabels[id] || id; // Use custom label if available, otherwise default to ID
