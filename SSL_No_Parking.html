@@ -71,13 +71,80 @@ html, body {
         background: #fff;
         position: absolute;
         z-index: 1;
-        bottom: 35px;
+        bottom: 85px;
         left: 10px;
         border-radius: 12px;
         width: 230px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         font-family: 'Open Sans', sans-serif;
         padding: 10px;
+    }
+
+    #satellite-toggle {
+        position: absolute;
+        bottom: 35px;
+        left: 10px;
+        background: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+        z-index: 1000;
+        width: 160px;
+        height: 35px;
+        display: flex;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #satellite-toggle::before {
+        content: 'Map';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background: #666;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 1;
+    }
+
+    #satellite-toggle::after {
+        content: 'Satellite';
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        background: #ffffff;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 1;
+        border-left: 1px solid #ccc;
+    }
+
+    #satellite-toggle.active::before {
+        background: #ffffff;
+        color: #666;
+    }
+
+    #satellite-toggle.active::after {
+        background: #666;
+        color: white;
+    }
+
+    #satellite-toggle:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .legend-title {
@@ -230,6 +297,9 @@ html, body {
         </div>
     </div>
 </div>
+
+<button id="satellite-toggle"></button>
+
 <div id="banner">
     <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
     <div id="banner-text">
@@ -323,16 +393,10 @@ html, body {
             'type': 'raster',
             'source': 'satellite',
             'layout': {
-                'visibility': 'visible'
+                'visibility': 'none'
             },
             'paint': {
-                'raster-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    15.4, 0,
-                    15.5, 0.65
-                ]
+                'raster-opacity': 0.65
             }
         }, 'SSL-Boundaries');
 
@@ -666,6 +730,37 @@ html, body {
                 map.setLayoutProperty('NP_Signs', 'visibility', signVisibility);
             }
         });
+
+        // Satellite toggle functionality
+        const satelliteToggle = document.getElementById('satellite-toggle');
+        console.log('Satellite toggle found:', satelliteToggle);
+        if (satelliteToggle) {
+            // Remove any existing event listeners
+            const newSatelliteToggle = satelliteToggle.cloneNode(true);
+            satelliteToggle.parentNode.replaceChild(newSatelliteToggle, satelliteToggle);
+            
+            newSatelliteToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const currentVisibility = map.getLayoutProperty('satellite-layer', 'visibility');
+                const isActive = newSatelliteToggle.classList.contains('active');
+                
+                console.log('Satellite toggle clicked. Current visibility:', currentVisibility, 'Is active:', isActive);
+                
+                if (currentVisibility === 'visible' || isActive) {
+                    // Hide satellite
+                    map.setLayoutProperty('satellite-layer', 'visibility', 'none');
+                    newSatelliteToggle.classList.remove('active');
+                    console.log('Satellite hidden');
+                } else {
+                    // Show satellite
+                    map.setLayoutProperty('satellite-layer', 'visibility', 'visible');
+                    newSatelliteToggle.classList.add('active');
+                    console.log('Satellite shown');
+                }
+            });
+        }
     }
 
     // Set up legend toggles when DOM is ready
