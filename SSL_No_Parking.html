@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SSL No Parking Zones</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.10.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#map { 
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    bottom: 0; 
+    right: 0;
+    width: 100%; 
+    height: 100%;
+}
+</style>
+</head>
+<body>
+<style>
+    #banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    color: #4d4d4d;
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#banner img {
+    height: 40px; /* Adjust as needed */
+    margin-right: 40px;
+}
+
+#banner-text {
+    display: flex;
+    align-items: right;
+}
+
+#bottom-right-logo {
+    position: absolute;
+    bottom: 20px;  /* Distance from the bottom */
+    right: 10px;   /* Distance from the right */
+    height: 60px;  /* Adjust the size as needed */
+    width: auto;   /* Maintain aspect ratio */
+}
+
+    #legend {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        bottom: 35px;
+        left: 10px;
+        border-radius: 12px;
+        width: 230px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        font-family: 'Open Sans', sans-serif;
+        padding: 10px;
+    }
+
+    .legend-title {
+        font-family: 'Arial Black', sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+        text-align: center;
+        color: #333;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+    }
+
+    .legend-item.small-text {
+        font-size: 11px;
+    }
+
+    .legend-item.spacer {
+        margin-bottom: 20px;
+    }
+
+    .legend-section {
+        margin-bottom: 25px;
+    }
+
+    .legend-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 4px;
+        margin-right: 10px;
+        border-radius: 2px;
+    }
+
+    .legend-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        object-fit: contain;
+    }
+
+    .legend-toggle {
+        margin-left: auto;
+        width: 32px;
+        height: 18px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background: #ccc;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.2s ease;
+    }
+
+    .legend-toggle::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        width: 14px;
+        height: 14px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .legend-toggle.active {
+        background: #666666;
+        border-color: #666666;
+    }
+
+    .legend-toggle.active::before {
+        transform: translateX(14px);
+    }
+
+/*    #menu a:last-child {
+        border: none;
+    }*/
+
+/*    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }*/
+
+        .mapboxgl-popup {
+        max-width: 400px;
+        font:
+            12px/20px 'Helvetica Neue',
+            Arial,
+            Helvetica,
+            sans-serif;
+    }
+
+
+
+</style>
+
+<div id="legend">
+    <div class="legend-title">No Parking Zones</div>
+    
+    <!-- Section 1: No Parking Signs -->
+    <div class="legend-section">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #FFC300;"></div>
+            <span>No Parking Signs</span>
+            <button class="legend-toggle active" data-layer="Sign_No_Parking"></button>
+        </div>
+        <div class="legend-item small-text">
+            <img class="legend-icon" src="https://lucashorns.github.io/gis/NP.png" alt="No Parking Sign">
+            <span>Sign Locations</span>
+        </div>
+    </div>
+    
+    <!-- Section 2: Fire Hydrants -->
+    <div class="legend-section">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #e41a1c;"></div>
+            <span>Fire Hydrants</span>
+            <button class="legend-toggle active" data-layer="Hydrant_No_Parking"></button>
+        </div>
+        <div class="legend-item small-text">
+            <img class="legend-icon" src="https://lucashorns.github.io/gis/hydrant.png" alt="Fire Hydrant">
+            <span>Hydrant Locations</span>
+        </div>
+    </div>
+    
+    <!-- Section 3: Crosswalks -->
+    <div class="legend-section">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #FF8C00;"></div>
+            <span>Crosswalks</span>
+            <button class="legend-toggle active" data-layer="Crosswalks"></button>
+        </div>
+    </div>
+</div>
+<div id="banner">
+    <img src="https://lucashorns.github.io/gis/SSL_LOGO_PRIM_HORZ_.png" alt="Logo">
+    <div id="banner-text">
+        <font face="Arial Black" size="+2" b>No Parking Zones</font>
+    </div>
+</div>
+<div id="map"></div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoibHVjYXNob3JucyIsImEiOiJjbTZ6ZGtweWMwM2RzMnFvbWJ2NGVoNjU1In0.dU3kPMeYYDdlAowT1VonWQ';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/light-v11',
+        zoom: 12.3,
+        center: [-111.899, 40.709]
+    });
+    
+
+    
+  const googleSheetCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZToqFchm73U9DIhOr9TsgSTSvfveG59DBh4mXZATKs3UKj4e7yLiE-Ai7V2nMrlZivZZg7cvBUPWr/pub?gid=0&single=true&output=csv'; // Replace with your actual CSV export URL
+
+  Papa.parse(googleSheetCSVURL, {
+    download: true,
+    header: true, // This tells Papa Parse that the first row contains column headers
+    dynamicTyping: true, // Optionally try to convert values to their numeric or boolean type
+    complete: function(results) {
+      window.projectData = results.data;
+      console.log("Data loaded from Google Sheet (Papa Parse):", window.projectData);
+      // Now you can use window.projectData to populate your map popups
+    },
+    error: function(error) {
+      console.error("Error fetching or parsing CSV:", error);
+    }
+  });
+
+
+
+
+          map.on('load', () => {
+        // ----------- SSL Boundaries ------------------
+        map.addSource('SSL-Boundaries', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.1nf958w9'
+        });
+        map.addLayer({
+            'id': 'SSL-Boundaries',
+            'type': 'line',
+            'source': 'SSL-Boundaries',
+            'source-layer': 'SSLBoundaries-chf6ku',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#000000',
+                'line-width': 1
+            }
+        });
+
+        // ----------- All Sides (Always Visible) -------------------------
+        // map.addSource('All_Sides', {
+        //     type: 'vector',
+        //     url: 'mapbox://lucashorns.2g1w42wn'
+        // });
+        // map.addLayer({
+        //     'id': 'All_Sides',
+        //     'type': 'line',
+        //     'source': 'All_Sides',
+        //     'source-layer': 'All_Sides-bgme09',
+        //     'layout': {
+        //         'visibility': 'visible',
+        //         'line-join': 'round',
+        //         'line-cap': 'round'
+        //     },
+        //     'paint': {
+        //         'line-color': '#ffffff',
+        //         'line-width': 4
+        //     }
+        // }, 'SSL-Boundaries');
+
+        // ----------- Satellite Imagery (High Zoom) -------------------------
+        map.addSource('satellite', {
+            'type': 'raster',
+            'url': 'mapbox://mapbox.satellite',
+            'tileSize': 256
+        });
+        map.addLayer({
+            'id': 'satellite-layer',
+            'type': 'raster',
+            'source': 'satellite',
+            'layout': {
+                'visibility': 'visible'
+            },
+            'paint': {
+                'raster-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    15.4, 0,
+                    15.5, 0.65
+                ]
+            }
+        }, 'SSL-Boundaries');
+
+        // ----------- Road Labels (Over Satellite) -------------------------
+        map.addLayer({
+            'id': 'road-labels-overlay',
+            'type': 'symbol',
+            'source': 'composite',
+            'source-layer': 'place_label',
+            'layout': {
+                'visibility': 'visible',
+                'text-field': ['get', 'name'],
+                'text-font': ['Open Sans Regular'],
+                'text-size': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    15.4, 0,
+                    15.5, 10,
+                    16, 12
+                ],
+                'text-allow-overlap': false,
+                'text-ignore-placement': false
+            },
+            'paint': {
+                'text-color': '#ffffff',
+                'text-halo-color': '#000000',
+                'text-halo-width': 2,
+                'text-opacity': [
+                    'interpolate',
+                    ['linear'],
+                    ['zoom'],
+                    15.4, 0,
+                    15.5, 1
+                ]
+            }
+        }, 'satellite-layer');
+
+        // ----------- Hydrant_No_Parking -------------------------
+        map.addSource('Hydrant_No_Parking', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.6b1nqbpi'
+        });
+        map.addLayer({
+            'id': 'Hydrant_No_Parking',
+            'type': 'line',
+            'source': 'Hydrant_No_Parking',
+            'source-layer': 'Hydrant_No_Parking-72217h',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'square'
+            },
+            'paint': {
+                'line-color': '#e41a1c',
+                'line-width': 4
+            }
+        });
+
+        // Load hydrant PNG from GitHub and create layer after image loads
+        map.loadImage('https://lucashorns.github.io/gis/hydrant.png', (error, image) => {
+            if (error) {
+                console.error('Error loading hydrant PNG:', error);
+                // Fallback to circles if PNG fails
+                map.addSource('Water-Hydrants', {
+                    type: 'vector',
+                    url: 'mapbox://lucashorns.cy0odp0u'
+                });
+                map.addLayer({
+                    'id': 'Water-Hydrants',
+                    'type': 'circle',
+                    'source': 'Water-Hydrants',
+                    'source-layer': 'Water_Hydrants-6xios5',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'circle-radius': 6,
+                        'circle-color': '#e41a1c',
+                        'circle-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            15.5, 0,
+                            16, 1
+                        ]
+                    }
+                });
+                console.log('Using circle fallback for Water-Hydrants');
+            } else {
+                // PNG loaded successfully, create symbol layer
+                map.addImage('hydrant-icon', image);
+                console.log('Hydrant PNG loaded successfully');
+                
+                map.addSource('Water-Hydrants', {
+                    type: 'vector',
+                    url: 'mapbox://lucashorns.cy0odp0u'
+                });
+                map.addLayer({
+                    'id': 'Water-Hydrants',
+                    'type': 'symbol',
+                    'source': 'Water-Hydrants',
+                    'source-layer': 'Water_Hydrants-6xios5',
+                    'layout': {
+                        'visibility': 'visible',
+                        'icon-image': 'hydrant-icon',
+                        'icon-size': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            16, 0.03,
+                            17.5, 0.04
+                        ],
+                        'icon-allow-overlap': true,
+                        'icon-anchor': 'bottom',
+                        'icon-rotate': 180
+                    },
+                    'paint': {
+                        'icon-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            15.5, 0,
+                            16, 1
+                        ]
+                    }
+                });
+                console.log('Water-Hydrants symbol layer created with PNG icon');
+            }
+        });
+
+        // Load No Parking sign PNG and create layer after image loads
+        map.loadImage('https://lucashorns.github.io/gis/NP.png', (error, image) => {
+            if (error) {
+                console.error('Error loading No Parking sign PNG:', error);
+                // Fallback to circles if PNG fails
+                map.addSource('NP_Signs', {
+                    type: 'vector',
+                    url: 'mapbox://lucashorns.b6eegb1d'
+                });
+                map.addLayer({
+                    'id': 'NP_Signs',
+                    'type': 'circle',
+                    'source': 'NP_Signs',
+                    'source-layer': 'NP_Signs-4v9z68',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'circle-radius': 6,
+                        'circle-color': '#FFC300',
+                        'circle-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            15.5, 0,
+                            16, 1
+                        ]
+                    }
+                });
+                console.log('Using circle fallback for NP_Signs');
+            } else {
+                // PNG loaded successfully, create symbol layer
+                map.addImage('np-sign-icon', image);
+                console.log('No Parking sign PNG loaded successfully');
+                
+                map.addSource('NP_Signs', {
+                    type: 'vector',
+                    url: 'mapbox://lucashorns.b6eegb1d'
+                });
+                map.addLayer({
+                    'id': 'NP_Signs',
+                    'type': 'symbol',
+                    'source': 'NP_Signs',
+                    'source-layer': 'NP_Signs-4v9z68',
+                    'layout': {
+                        'visibility': 'visible',
+                        'icon-image': 'np-sign-icon',
+                        'icon-size': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            16, 0.03,
+                            17.5, 0.04
+                        ],
+                        'icon-allow-overlap': true,
+                        'icon-anchor': 'bottom',
+                        'icon-rotate': 180
+                    },
+                    'paint': {
+                        'icon-opacity': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            15.5, 0,
+                            16, 1
+                        ]
+                    }
+                });
+                console.log('NP_Signs symbol layer created with PNG icon');
+            }
+        });
+
+        // ----------- Sign_No_Parking -------------------------
+        map.addSource('Sign_No_Parking', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.6qvbflob'
+        });
+        map.addLayer({
+            'id': 'Sign_No_Parking',
+            'type': 'line',
+            'source': 'Sign_No_Parking',
+            'source-layer': 'NP_Sign_No_Parking-1o05ig',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            'paint': {
+                'line-color': '#FFC300',
+                'line-width': 4
+            }
+        });
+
+        // ----------- Crosswalks -------------------------
+        map.addSource('Crosswalks', {
+            type: 'vector',
+            url: 'mapbox://lucashorns.crs5pf33'
+        });
+        map.addLayer({
+            'id': 'Crosswalks',
+            'type': 'line',
+            'source': 'Crosswalks',
+            'source-layer': 'Intersection_No_Parking-0n9fdp',
+            'layout': {
+                'visibility': 'visible',
+                'line-join': 'round',
+                'line-cap': 'square'
+            },
+            'paint': {
+                'line-color': '#FF8C00',
+                'line-width': 4
+            }
+        });
+    });
+    
+    // Set up legend toggle functionality using event delegation
+    function setupLegendToggles() {
+        // Use event delegation on the legend container
+        const legend = document.getElementById('legend');
+        
+        if (!legend) {
+            console.error('Legend element not found');
+            return;
+        }
+
+        // Remove any existing event listeners by cloning the legend
+        const newLegend = legend.cloneNode(true);
+        legend.parentNode.replaceChild(newLegend, legend);
+
+        // Add event listener to the legend container using event delegation
+        newLegend.addEventListener('click', function(e) {
+            // Check if the clicked element is a toggle button
+            if (e.target.classList.contains('legend-toggle')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const layerId = e.target.getAttribute('data-layer');
+                console.log('Toggle clicked for layer:', layerId);
+                
+                if (!layerId) {
+                    console.error('No layer ID found for toggle');
+                    return;
+                }
+                
+                try {
+                    const visibility = map.getLayoutProperty(layerId, 'visibility');
+                    console.log('Current visibility:', visibility);
+
+                    if (visibility === 'visible') {
+                        // Hide layer
+                        map.setLayoutProperty(layerId, 'visibility', 'none');
+                        e.target.classList.remove('active');
+                        console.log('Layer hidden:', layerId);
+                        
+                        // Hide synchronized layers
+                        if (layerId === 'Hydrant_No_Parking') {
+                            map.setLayoutProperty('Water-Hydrants', 'visibility', 'none');
+                            console.log('Water-Hydrants hidden');
+                        }
+                        
+                        if (layerId === 'Sign_No_Parking') {
+                            map.setLayoutProperty('NP_Signs', 'visibility', 'none');
+                            console.log('NP_Signs hidden');
+                        }
+                    } else {
+                        // Show layer
+                        map.setLayoutProperty(layerId, 'visibility', 'visible');
+                        e.target.classList.add('active');
+                        console.log('Layer shown:', layerId);
+                        
+                        // Show synchronized layers
+                        if (layerId === 'Hydrant_No_Parking') {
+                            map.setLayoutProperty('Water-Hydrants', 'visibility', 'visible');
+                            console.log('Water-Hydrants shown');
+                        }
+                        
+                        if (layerId === 'Sign_No_Parking') {
+                            map.setLayoutProperty('NP_Signs', 'visibility', 'visible');
+                            console.log('NP_Signs shown');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error toggling layer:', layerId, error);
+                }
+            }
+        });
+
+        // Ensure synchronized layers are set up on initial load
+        const toggles = newLegend.querySelectorAll('.legend-toggle');
+        toggles.forEach(toggle => {
+            const layerId = toggle.getAttribute('data-layer');
+            
+            if (layerId === 'Hydrant_No_Parking') {
+                const hydrantVisibility = map.getLayoutProperty('Hydrant_No_Parking', 'visibility');
+                map.setLayoutProperty('Water-Hydrants', 'visibility', hydrantVisibility);
+            }
+            
+            if (layerId === 'Sign_No_Parking') {
+                const signVisibility = map.getLayoutProperty('Sign_No_Parking', 'visibility');
+                map.setLayoutProperty('NP_Signs', 'visibility', signVisibility);
+            }
+        });
+    }
+
+    // Set up legend toggles when DOM is ready
+    function initializeLegend() {
+        // Wait a bit to ensure DOM is fully ready
+        setTimeout(() => {
+            setupLegendToggles();
+        }, 100);
+    }
+
+    // After the last frame rendered before the map enters an "idle" state.
+    map.on('idle', () => {
+        // If these layers were not added to the map, abort
+        if (!map.getLayer('Sign_No_Parking') || !map.getLayer('Hydrant_No_Parking') || !map.getLayer('Water-Hydrants') || !map.getLayer('NP_Signs') || !map.getLayer('Crosswalks')) {
+            return;
+        }
+
+        // Initialize legend toggles
+        initializeLegend();
+    });
+
+    // Also try to set up legend when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Wait for map to be ready
+        if (map.loaded()) {
+            initializeLegend();
+        } else {
+            map.once('load', () => {
+                setTimeout(initializeLegend, 500);
+            });
+        }
+    });
+</script>
+<img id="bottom-right-logo" src="https://lucashorns.github.io/gis/WatermarkCropped.png" alt="Bottom Right Logo">
+</body>
+</html>
