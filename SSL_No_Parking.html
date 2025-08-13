@@ -338,32 +338,69 @@ html, body {
     
 
     
-  // Google Sheet URL for parking complaints (using CORS proxy)
-  const parkingComplaintsCSVURL = 'https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vRuzt5Ipy8TSS2FMV5zcoO-UGpBTM-zQiJ3gQQ8y6zl7ktmzqw2Cl-zTZsq8CuJe7jiQRpDkAo_QLRw/pub?output=csv&gid=669627849';
+  // Google Sheet URL for parking complaints (direct access for faster loading)
+  const parkingComplaintsCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuzt5Ipy8TSS2FMV5zcoO-UGpBTM-zQiJ3gQQ8y6zl7ktmzqw2Cl-zTZsq8CuJe7jiQRpDkAo_QLRw/pub?output=csv&gid=669627849';
 
   // Function to load parking complaints data
   function loadParkingComplaints() {
     console.log('Loading parking complaints from:', parkingComplaintsCSVURL);
     
-    Papa.parse(parkingComplaintsCSVURL, {
-      download: true,
-      header: true,
-      dynamicTyping: true,
-      complete: function(results) {
-        console.log("Papa Parse results:", results);
-        window.parkingComplaintsData = results.data;
-        console.log("Parking complaints data loaded:", window.parkingComplaintsData);
-        
-        // Update the parking complaints layer if it exists
-        if (map.getSource('parking-complaints')) {
-          updateParkingComplaintsLayer();
-        } else {
-          console.log('Parking complaints source not yet available');
-        }
-      },
-      error: function(error) {
-        console.error("Error fetching parking complaints CSV:", error);
+    // Use fetch with timeout for faster loading
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    fetch(parkingComplaintsCSVURL, {
+      signal: controller.signal,
+      cache: 'no-cache' // Force fresh data
+    })
+    .then(response => {
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      return response.text();
+    })
+    .then(csvText => {
+      Papa.parse(csvText, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true, // Skip empty rows for faster processing
+        complete: function(results) {
+          console.log("Parking complaints data loaded:", results.data.length, "rows");
+          window.parkingComplaintsData = results.data;
+          
+          // Update the parking complaints layer if it exists
+          if (map.getSource('parking-complaints')) {
+            updateParkingComplaintsLayer();
+          } else {
+            console.log('Parking complaints source not yet available');
+          }
+        },
+        error: function(error) {
+          console.error("Error parsing CSV:", error);
+        }
+      });
+    })
+    .catch(error => {
+      clearTimeout(timeoutId);
+      console.error("Error fetching parking complaints CSV:", error);
+      
+      // Fallback to Papa Parse if fetch fails
+      Papa.parse(parkingComplaintsCSVURL, {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          window.parkingComplaintsData = results.data;
+          if (map.getSource('parking-complaints')) {
+            updateParkingComplaintsLayer();
+          }
+        },
+        error: function(error) {
+          console.error("Fallback error:", error);
+        }
+      });
     });
   }
 
@@ -426,8 +463,8 @@ html, body {
     console.log(`Updated parking complaints layer with ${features.length} points`);
   }
 
-  // Load parking complaints data initially
-  loadParkingComplaints();
+  // Load parking complaints data initially with a small delay to prioritize map loading
+  setTimeout(loadParkingComplaints, 1000);
 
   // Set up auto-refresh every 5 minutes
   setInterval(loadParkingComplaints, 5 * 60 * 1000);
@@ -866,7 +903,7 @@ html, body {
                 console.log('No parking complaints data available, loading now...');
                 loadParkingComplaints();
             }
-        }, 1000);
+        }, 500);
     });
     
     // Set up legend toggle functionality using event delegation
