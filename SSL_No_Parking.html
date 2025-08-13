@@ -147,6 +147,8 @@ html, body {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
+
+
     .legend-title {
         font-family: 'Arial Black', sans-serif;
         font-size: 18px;
@@ -296,6 +298,22 @@ html, body {
             <button class="legend-toggle active" data-layer="Crosswalks"></button>
         </div>
     </div>
+    
+    <!-- Section 4: Parking Complaints (Live) -->
+    <div class="legend-section">
+        <div class="legend-item">
+            <span>Parking Complaints</span>
+            <button class="legend-toggle active" data-layer="parking-complaints"></button>
+        </div>
+        <div class="legend-item small-text">
+            <div class="legend-color" style="background-color: #E81AE5; border-radius: 50%; width: 12px; height: 12px;"></div>
+            <span>Active</span>
+        </div>
+        <div class="legend-item small-text">
+            <div class="legend-color" style="background-color: #00FF00; border-radius: 50%; width: 12px; height: 12px;"></div>
+            <span>Completed</span>
+        </div>
+    </div>
 </div>
 
 <button id="satellite-toggle"></button>
@@ -320,16 +338,110 @@ html, body {
     
 
     
-  const googleSheetCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZToqFchm73U9DIhOr9TsgSTSvfveG59DBh4mXZATKs3UKj4e7yLiE-Ai7V2nMrlZivZZg7cvBUPWr/pub?gid=0&single=true&output=csv'; // Replace with your actual CSV export URL
+  // Google Sheet URL for parking complaints (using CORS proxy)
+  const parkingComplaintsCSVURL = 'https://api.allorigins.win/raw?url=https://docs.google.com/spreadsheets/d/e/2PACX-1vRuzt5Ipy8TSS2FMV5zcoO-UGpBTM-zQiJ3gQQ8y6zl7ktmzqw2Cl-zTZsq8CuJe7jiQRpDkAo_QLRw/pub?output=csv&gid=669627849';
+
+  // Function to load parking complaints data
+  function loadParkingComplaints() {
+    console.log('Loading parking complaints from:', parkingComplaintsCSVURL);
+    
+    Papa.parse(parkingComplaintsCSVURL, {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: function(results) {
+        console.log("Papa Parse results:", results);
+        window.parkingComplaintsData = results.data;
+        console.log("Parking complaints data loaded:", window.parkingComplaintsData);
+        
+        // Update the parking complaints layer if it exists
+        if (map.getSource('parking-complaints')) {
+          updateParkingComplaintsLayer();
+        } else {
+          console.log('Parking complaints source not yet available');
+        }
+      },
+      error: function(error) {
+        console.error("Error fetching parking complaints CSV:", error);
+      }
+    });
+  }
+
+  // Function to update parking complaints layer
+  function updateParkingComplaintsLayer() {
+    if (!window.parkingComplaintsData || !map.getSource('parking-complaints')) {
+      console.log('No parking complaints data or source available');
+      return;
+    }
+
+    console.log('Raw parking complaints data:', window.parkingComplaintsData);
+    
+    // Check what columns are available
+    if (window.parkingComplaintsData.length > 0) {
+      console.log('Available columns:', Object.keys(window.parkingComplaintsData[0]));
+    }
+
+    // Try multiple possible column name variations for coordinates
+    const features = window.parkingComplaintsData
+      .filter(row => {
+        // Check for various possible column names
+        const lat = row.Latitude || row.latitude || row.LAT || row.lat || row.Lat;
+        const lng = row.Longitude || row.longitude || row.LNG || row.lng || row.Lng || row.Lon || row.lon;
+        
+        console.log('Row coordinates check:', { lat, lng, row });
+        
+        return lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng));
+      })
+      .map(row => {
+        // Get coordinates with fallback column names
+        const lat = row.Latitude || row.latitude || row.LAT || row.lat || row.Lat;
+        const lng = row.Longitude || row.longitude || row.LNG || row.lng || row.Lng || row.Lon || row.lon;
+        
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(lng), parseFloat(lat)]
+          },
+          properties: {
+            id: row.id || row.ID || Math.random().toString(36).substr(2, 9),
+            name: row.Name || row.name || row.NAME || 'No name provided',
+            address: row.Address || row.address || row.ADDRESS || 'No address provided',
+            description: row.Description || row.description || row.DESC || 'No description provided',
+            date: row.Date || row.date || row.DATE || 'No date provided',
+            status: row.Status || row.status || row.STATUS || 'Unknown',
+            type: row.Type || row.type || row.TYPE || 'Complaint'
+          }
+        };
+      });
+
+    console.log('Filtered features:', features);
+
+    const geojson = {
+      type: 'FeatureCollection',
+      features: features
+    };
+
+    map.getSource('parking-complaints').setData(geojson);
+    console.log(`Updated parking complaints layer with ${features.length} points`);
+  }
+
+  // Load parking complaints data initially
+  loadParkingComplaints();
+
+  // Set up auto-refresh every 5 minutes
+  setInterval(loadParkingComplaints, 5 * 60 * 1000);
+
+  // Original project data loading (keeping for compatibility)
+  const googleSheetCSVURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRZToqFchm73U9DIhOr9TsgSTSvfveG59DBh4mXZATKs3UKj4e7yLiE-Ai7V2nMrlZivZZg7cvBUPWr/pub?gid=0&single=true&output=csv';
 
   Papa.parse(googleSheetCSVURL, {
     download: true,
-    header: true, // This tells Papa Parse that the first row contains column headers
-    dynamicTyping: true, // Optionally try to convert values to their numeric or boolean type
+    header: true,
+    dynamicTyping: true,
     complete: function(results) {
       window.projectData = results.data;
       console.log("Data loaded from Google Sheet (Papa Parse):", window.projectData);
-      // Now you can use window.projectData to populate your map popups
     },
     error: function(error) {
       console.error("Error fetching or parsing CSV:", error);
@@ -438,13 +550,13 @@ html, body {
         // ----------- Hydrant_No_Parking -------------------------
         map.addSource('Hydrant_No_Parking', {
             type: 'vector',
-            url: 'mapbox://lucashorns.6b1nqbpi'
+            url: 'mapbox://lucashorns.6snrz09r'
         });
         map.addLayer({
             'id': 'Hydrant_No_Parking',
             'type': 'line',
             'source': 'Hydrant_No_Parking',
-            'source-layer': 'Hydrant_No_Parking-72217h',
+            'source-layer': 'All_Hydrant_No_Parking-1iv7kf',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -463,13 +575,13 @@ html, body {
                 // Fallback to circles if PNG fails
                 map.addSource('Water-Hydrants', {
                     type: 'vector',
-                    url: 'mapbox://lucashorns.cy0odp0u'
+                    url: 'mapbox://lucashorns.bxa5dgd8'
                 });
                 map.addLayer({
                     'id': 'Water-Hydrants',
                     'type': 'circle',
                     'source': 'Water-Hydrants',
-                    'source-layer': 'Water_Hydrants-6xios5',
+                    'source-layer': 'All_Hydrants-4tjmyc',
                     'layout': {
                         'visibility': 'visible'
                     },
@@ -493,13 +605,13 @@ html, body {
                 
                 map.addSource('Water-Hydrants', {
                     type: 'vector',
-                    url: 'mapbox://lucashorns.cy0odp0u'
+                    url: 'mapbox://lucashorns.bxa5dgd8'
                 });
                 map.addLayer({
                     'id': 'Water-Hydrants',
                     'type': 'symbol',
                     'source': 'Water-Hydrants',
-                    'source-layer': 'Water_Hydrants-6xios5',
+                    'source-layer': 'All_Hydrants-4tjmyc',
                     'layout': {
                         'visibility': 'visible',
                         'icon-image': 'hydrant-icon',
@@ -641,6 +753,120 @@ html, body {
                 'line-width': 4
             }
         });
+
+        // ----------- Parking Complaints (Live from Google Sheet) -------------------------
+        map.addSource('parking-complaints', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: []
+            }
+        });
+        
+        // Add pin icon for parking complaints
+        map.loadImage('https://lucashorns.github.io/gis/pin.png', (error, image) => {
+            if (error) {
+                console.error('Error loading pin PNG:', error);
+                // Fallback to circles if PNG fails
+                map.addLayer({
+                    'id': 'parking-complaints',
+                    'type': 'circle',
+                    'source': 'parking-complaints',
+                    'layout': {
+                        'visibility': 'visible'
+                    },
+                    'paint': {
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            12, 6,
+                            16, 12
+                        ],
+                        'circle-color': [
+                            'case',
+                            ['==', ['get', 'status'], 'Completed'], '#00FF00',
+                            ['==', ['get', 'status'], 'Active'], '#E81AE5',
+                            '#FF1493'
+                        ],
+                        'circle-stroke-color': '#ffffff',
+                        'circle-stroke-width': 2,
+                        'circle-opacity': 0.8
+                    }
+                });
+                console.log('Using circle fallback for parking complaints');
+            } else {
+                // PNG loaded successfully, create symbol layer
+                map.addImage('complaint-pin', image);
+                console.log('Complaint pin PNG loaded successfully');
+                
+                map.addLayer({
+                    'id': 'parking-complaints',
+                    'type': 'symbol',
+                    'source': 'parking-complaints',
+                    'layout': {
+                        'visibility': 'visible',
+                        'icon-image': 'complaint-pin',
+                        'icon-size': [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            12, 0.5,
+                            16, 0.8
+                        ],
+                        'icon-allow-overlap': true,
+                        'icon-anchor': 'bottom'
+                    },
+                    'paint': {
+                        'icon-color': [
+                            'case',
+                            ['==', ['get', 'status'], 'Completed'], '#00FF00',
+                            ['==', ['get', 'status'], 'Active'], '#FFFF00',
+                            '#FF1493'
+                        ],
+                        'icon-opacity': 0.9
+                    }
+                });
+                console.log('Parking complaints symbol layer created with pin icon');
+            }
+        });
+
+        // Add popup for parking complaints
+        map.on('click', 'parking-complaints', (e) => {
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const properties = e.features[0].properties;
+            
+            const popupContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 300px;">
+                    <p>${properties.name}</p>
+                </div>
+            `;
+            
+            new mapboxgl.Popup()
+                .setLngLat(coordinates)
+                .setHTML(popupContent)
+                .addTo(map);
+        });
+
+        // Change cursor to pointer when hovering over parking complaints
+        map.on('mouseenter', 'parking-complaints', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'parking-complaints', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        // Initialize parking complaints layer after map loads
+        setTimeout(() => {
+            console.log('Checking for parking complaints data after map load...');
+            if (window.parkingComplaintsData) {
+                updateParkingComplaintsLayer();
+            } else {
+                console.log('No parking complaints data available, loading now...');
+                loadParkingComplaints();
+            }
+        }, 1000);
     });
     
     // Set up legend toggle functionality using event delegation
@@ -692,6 +918,10 @@ html, body {
                             map.setLayoutProperty('NP_Signs', 'visibility', 'none');
                             console.log('NP_Signs hidden');
                         }
+                        
+                        if (layerId === 'parking-complaints') {
+                            console.log('Parking complaints hidden');
+                        }
                     } else {
                         // Show layer
                         map.setLayoutProperty(layerId, 'visibility', 'visible');
@@ -707,6 +937,10 @@ html, body {
                         if (layerId === 'Sign_No_Parking') {
                             map.setLayoutProperty('NP_Signs', 'visibility', 'visible');
                             console.log('NP_Signs shown');
+                        }
+                        
+                        if (layerId === 'parking-complaints') {
+                            console.log('Parking complaints shown');
                         }
                     }
                 } catch (error) {
@@ -761,6 +995,8 @@ html, body {
                 }
             });
         }
+
+
     }
 
     // Set up legend toggles when DOM is ready
@@ -774,7 +1010,7 @@ html, body {
     // After the last frame rendered before the map enters an "idle" state.
     map.on('idle', () => {
         // If these layers were not added to the map, abort
-        if (!map.getLayer('Sign_No_Parking') || !map.getLayer('Hydrant_No_Parking') || !map.getLayer('Water-Hydrants') || !map.getLayer('NP_Signs') || !map.getLayer('Crosswalks')) {
+        if (!map.getLayer('Sign_No_Parking') || !map.getLayer('Hydrant_No_Parking') || !map.getLayer('Water-Hydrants') || !map.getLayer('NP_Signs') || !map.getLayer('Crosswalks') || !map.getLayer('parking-complaints')) {
             return;
         }
 
@@ -794,6 +1030,6 @@ html, body {
         }
     });
 </script>
-<img id="bottom-right-logo" src="https://lucashorns.github.io/gis/WatermarkCropped.png" alt="Bottom Right Logo">
+<img id="bottom-right-logo" src="https://lucashorns.github.io/gis/Watermark2.png" alt="Bottom Right Logo">
 </body>
 </html>
