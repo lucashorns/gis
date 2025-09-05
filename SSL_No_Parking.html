@@ -587,13 +587,13 @@ html, body {
         // ----------- Hydrant_No_Parking -------------------------
         map.addSource('Hydrant_No_Parking', {
             type: 'vector',
-            url: 'mapbox://lucashorns.6snrz09r'
+            url: 'mapbox://lucashorns.014gym97'
         });
         map.addLayer({
             'id': 'Hydrant_No_Parking',
             'type': 'line',
             'source': 'Hydrant_No_Parking',
-            'source-layer': 'All_Hydrant_No_Parking-1iv7kf',
+            'source-layer': 'No_Parking_All_Hydrant_Update-c4k6ow',
             'layout': {
                 'visibility': 'visible',
                 'line-join': 'round',
@@ -612,13 +612,13 @@ html, body {
                 // Fallback to circles if PNG fails
                 map.addSource('Water-Hydrants', {
                     type: 'vector',
-                    url: 'mapbox://lucashorns.bxa5dgd8'
+                    url: 'mapbox://lucashorns.cvo5jtul'
                 });
                 map.addLayer({
                     'id': 'Water-Hydrants',
                     'type': 'circle',
                     'source': 'Water-Hydrants',
-                    'source-layer': 'All_Hydrants-4tjmyc',
+                    'source-layer': 'All_Hydrants_Update-cybomb',
                     'layout': {
                         'visibility': 'visible'
                     },
@@ -642,13 +642,13 @@ html, body {
                 
                 map.addSource('Water-Hydrants', {
                     type: 'vector',
-                    url: 'mapbox://lucashorns.bxa5dgd8'
+                    url: 'mapbox://lucashorns.cvo5jtul'
                 });
                 map.addLayer({
                     'id': 'Water-Hydrants',
                     'type': 'symbol',
                     'source': 'Water-Hydrants',
-                    'source-layer': 'All_Hydrants-4tjmyc',
+                    'source-layer': 'All_Hydrants_Update-cybomb',
                     'layout': {
                         'visibility': 'visible',
                         'icon-image': 'hydrant-icon',
