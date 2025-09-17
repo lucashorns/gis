@@ -131,12 +131,12 @@ body { margin: 0; padding: 0; }
     text-align: center;
 }
 
-#Streets {
+/*#Streets {
     background-color: #ff7f00; 
     color: #ffffff;
     font-weight: bold;
     text-align: center;
-}
+}*/
 
 #UTA {
     background-color: #a65628; 
@@ -145,11 +145,11 @@ body { margin: 0; padding: 0; }
     text-align: center;
 }
 
-#Slurry-Seal {
+/*#Slurry-Seal {
     background-color: #FFC300; 
     color: #ffffff;
     font-weight: bold;
-    text-align: center;
+    text-align: center;*/
 }
 
 #Private-Development:hover {
@@ -168,17 +168,17 @@ body { margin: 0; padding: 0; }
     background-color: #2b6391; 
 }
 
-#Streets:hover {
+/*#Streets:hover {
     background-color: #cc6600; 
-}
+}*/
 
 #UTA:hover {
     background-color: #7d411e; 
 }
 
-#Slurry-Seal:hover {
+/*#Slurry-Seal:hover {
     background-color: #dcaf08; 
-}
+}*/
 
 </style>
 
@@ -284,30 +284,30 @@ body { margin: 0; padding: 0; }
         });
 
 // ----------- Streets -------------------------
-        map.addSource('Streets', {
-            type: 'vector',
-            url: 'mapbox://lucashorns.chi2qzfn'
-        });
-        map.addLayer({
-            'id': 'Streets',
-            'type': 'line',
-            'source': 'Streets',
-            'source-layer': 'Streets2-9m59d2',
-            'layout': {
-                'visibility': 'visible',
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            'paint': {
-                'line-color': '#ff7f00',
-                'line-width': 7
-            }
-        });
+        // map.addSource('Streets', {
+        //     type: 'vector',
+        //     url: 'mapbox://lucashorns.chi2qzfn'
+        // });
+        // map.addLayer({
+        //     'id': 'Streets',
+        //     'type': 'line',
+        //     'source': 'Streets',
+        //     'source-layer': 'Streets2-9m59d2',
+        //     'layout': {
+        //         'visibility': 'visible',
+        //         'line-join': 'round',
+        //         'line-cap': 'round'
+        //     },
+        //     'paint': {
+        //         'line-color': '#ff7f00',
+        //         'line-width': 7
+        //     }
+        // });
 
 // ----------- Private Development ------------------
         map.addSource('Private-Development', {
             type: 'vector',
-            url: 'mapbox://lucashorns.5t03j5vj'
+            url: 'mapbox://lucashorns.2zoha30e'
         });
         map.addLayer({
             'id': 'Private-Development',
@@ -320,7 +320,7 @@ body { margin: 0; padding: 0; }
                 'circle-radius': 5,
                 'circle-color': '#4daf4a'
             },
-            'source-layer': 'Private_Developments_SHP-3kbkux'
+            'source-layer': 'Private_Developments_SHP-535q7o'
         });
 
 // ----------- Public Works ------------------
@@ -364,26 +364,26 @@ body { margin: 0; padding: 0; }
         });
 
 // ----------- Slurry Seal -------------------------
-        map.addSource('Slurry-Seal', {
-            type: 'vector',
-            url: 'mapbox://lucashorns.6ex1vdio'
-        });
-        map.addLayer({
-            'id': 'Slurry-Seal',
-            'type': 'line',
-            'source': 'Slurry-Seal',
-            'source-layer': 'Slurry_Seal-a6ta4g',
-            'layout': {
-                'visibility': 'visible',
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            'paint': {
-                'line-color': '#FFC300',
-                'line-width': 2,
-                'line-dasharray': [2, 2]
-            }
-        });
+        // map.addSource('Slurry-Seal', {
+        //     type: 'vector',
+        //     url: 'mapbox://lucashorns.6ex1vdio'
+        // });
+        // map.addLayer({
+        //     'id': 'Slurry-Seal',
+        //     'type': 'line',
+        //     'source': 'Slurry-Seal',
+        //     'source-layer': 'Slurry_Seal-a6ta4g',
+        //     'layout': {
+        //         'visibility': 'visible',
+        //         'line-join': 'round',
+        //         'line-cap': 'round'
+        //     },
+        //     'paint': {
+        //         'line-color': '#FFC300',
+        //         'line-width': 2,
+        //         'line-dasharray': [2, 2]
+        //     }
+        // });
 
     });
     // After the last frame rendered before the map enters an "idle" state.
@@ -394,7 +394,7 @@ body { margin: 0; padding: 0; }
         }
 
         // Enumerate ids of the layers.
-        const toggleableLayerIds = ['Engineering', 'Public-Works', 'Water', 'Streets', 'UTA', 'Private-Development', 'Slurry-Seal'];
+        const toggleableLayerIds = ['Engineering', 'Public-Works', 'Water', 'UTA', 'Private-Development'];
 
         // Set up the corresponding toggle button for each layer.
         for (const id of toggleableLayerIds) {
@@ -409,8 +409,8 @@ body { margin: 0; padding: 0; }
                                     "Engineering": "Engineering",
                                         "Public-Works": "Public Works",
                                             "Water": "Public Works - Water", 
-                                                "UTA": "UTA / UDOT",
-                                                    "Slurry-Seal": "Engineering / Public Works - Slurry Seal"}
+                                                "UTA": "UTA / UDOT"}
+                                                    // "Slurry-Seal": "Engineering / Public Works - Slurry Seal"}
             link.id = id;
             link.href = '#';
             link.textContent = layerLabels[id] || id; // Use custom label if available, otherwise default to ID
@@ -537,44 +537,44 @@ body { margin: 0; padding: 0; }
 
         //  ---------- Slurry Seal ----------------
 
-                map.on('click', 'Slurry-Seal', (e) => {
-            // Copy coordinates array.
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            // const description = e.features[0].properties.Name;
-            // const feature = e.features[0];
-            const id = e.features[0].properties.id;
-            const project = window.projectData.find(d => d.id === id);
+        //         map.on('click', 'Slurry-Seal', (e) => {
+        //     // Copy coordinates array.
+        //     const coordinates = e.features[0].geometry.coordinates.slice();
+        //     // const description = e.features[0].properties.Name;
+        //     // const feature = e.features[0];
+        //     const id = e.features[0].properties.id;
+        //     const project = window.projectData.find(d => d.id === id);
 
-            // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-            }
+        //     // Ensure that if the map is zoomed out such that multiple
+        //     // copies of the feature are visible, the popup appears
+        //     // over the copy being pointed to.
+        //     if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+        //         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        //             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        //         }
+        //     }
 
-            new mapboxgl.Popup({
-                closeButton: false,
+        //     new mapboxgl.Popup({
+        //         closeButton: false,
 
-            })
-                .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
-                            <br><font face= "Arial">${project.Address}</font>
-                            <br><font face= "Arial" color="#dcaf08">${project.Department}</font>
-                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
-                .addTo(map);
-        });
+        //     })
+        //         .setLngLat(e.lngLat)
+        //         .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+        //                     <br><font face= "Arial">${project.Address}</font>
+        //                     <br><font face= "Arial" color="#dcaf08">${project.Department}</font>
+        //                      ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
+        //         .addTo(map);
+        // });
 
-        // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'Slurry-Seal', () => {
-            map.getCanvas().style.cursor = 'pointer';
-        });
+        // // Change the cursor to a pointer when the mouse is over the places layer.
+        // map.on('mouseenter', 'Slurry-Seal', () => {
+        //     map.getCanvas().style.cursor = 'pointer';
+        // });
 
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Slurry-Seal', () => {
-            map.getCanvas().style.cursor = '';
-        });
+        // // Change it back to a pointer when it leaves.
+        // map.on('mouseleave', 'Slurry-Seal', () => {
+        //     map.getCanvas().style.cursor = '';
+        // });
 
         //  ---------- Public Works ----------------
 
@@ -660,44 +660,44 @@ body { margin: 0; padding: 0; }
 
         //  ---------- Streets ----------------
 
-                map.on('click', 'Streets', (e) => {
-            // Copy coordinates array.
-            const coordinates = e.features[0].geometry.coordinates.slice();
-            // const description = e.features[0].properties.Name;
-            // const feature = e.features[0];
-            const id = e.features[0].properties.id;
-            const project = window.projectData.find(d => d.id === id);
+        //         map.on('click', 'Streets', (e) => {
+        //     // Copy coordinates array.
+        //     const coordinates = e.features[0].geometry.coordinates.slice();
+        //     // const description = e.features[0].properties.Name;
+        //     // const feature = e.features[0];
+        //     const id = e.features[0].properties.id;
+        //     const project = window.projectData.find(d => d.id === id);
 
-            // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
-            }
+        //     // Ensure that if the map is zoomed out such that multiple
+        //     // copies of the feature are visible, the popup appears
+        //     // over the copy being pointed to.
+        //     if (['mercator', 'equirectangular'].includes(map.getProjection().name)) {
+        //         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        //             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        //         }
+        //     }
 
-            new mapboxgl.Popup({
-                closeButton: false,
+        //     new mapboxgl.Popup({
+        //         closeButton: false,
 
-            })
-                .setLngLat(e.lngLat)
-                .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
-                            <br><font face= "Arial">${project.Address}</font>
-                            <br><font face= "Arial" color="#ff7f00">${project.Department}</font>
-                             ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
-                .addTo(map);
-        });
+        //     })
+        //         .setLngLat(e.lngLat)
+        //         .setHTML(`<font face= "Arial Black" b>${project.Name}</font>
+        //                     <br><font face= "Arial">${project.Address}</font>
+        //                     <br><font face= "Arial" color="#ff7f00">${project.Department}</font>
+        //                      ${project.URL ? `<br><a href="${project.URL}" target="_blank" style="color:#377eb8; text-decoration:underline;">Get More Info</a>` : ''}`)
+        //         .addTo(map);
+        // });
 
-        // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on('mouseenter', 'Streets', () => {
-            map.getCanvas().style.cursor = 'pointer';
-        });
+        // // Change the cursor to a pointer when the mouse is over the places layer.
+        // map.on('mouseenter', 'Streets', () => {
+        //     map.getCanvas().style.cursor = 'pointer';
+        // });
 
-        // Change it back to a pointer when it leaves.
-        map.on('mouseleave', 'Streets', () => {
-            map.getCanvas().style.cursor = '';
-        });
+        // // Change it back to a pointer when it leaves.
+        // map.on('mouseleave', 'Streets', () => {
+        //     map.getCanvas().style.cursor = '';
+        // });
 
         //  ---------- UTA ----------------
 
