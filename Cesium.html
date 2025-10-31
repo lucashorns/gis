@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Gondola Towers - CesiumJS</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.110/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.110/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      transition: width 0.3s ease;
+      position: relative;
+    }
+    #cesiumContainer.with-sidebar {
+      width: calc(100% - 500px);
+    }
+    #tower-buttons {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1;
+    }
+    .tower-button {
+      background: #fff5d6;
+      color: #2a3251;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      display: block;
+      width: 100%;
+    }
+    .tower-button:hover {
+      background: #ffe9b3;
+    }
+    .nav-buttons {
+      display: none;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    .nav-buttons.visible {
+      display: flex;
+    }
+    .nav-button {
+      background: #fff5d6;
+      color: #2a3251;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 20px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    .nav-button:hover {
+      background: #ffe9b3;
+    }
+    #side-menu {
+      position: fixed;
+      right: -500px;
+      top: 0;
+      width: 500px;
+      height: 100%;
+      background: #ffc845;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+      transition: right 0.3s ease;
+      overflow-y: auto;
+      z-index: 1000;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    #side-menu.visible {
+      right: 0;
+    }
+    #side-menu img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    #change-viewpoint-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2a3251;
+      color: #ffffff;
+      border: none;
+      padding: 5px 5px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+      display: none;
+    }
+    #change-viewpoint-btn.visible {
+      display: block;
+    }
+    #change-viewpoint-btn:hover {
+      background: #1a1f35;
+    }
+    #change-viewpoint-btn img {
+      height: 1em;
+      width: auto;
+      vertical-align: middle;
+      margin-right: 6px;
+      filter: brightness(0) invert(1);
+    }
+    #welcome-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    #welcome-modal.hidden {
+      display: none;
+    }
+    #welcome-modal-content {
+      background: #fff5d6;
+      color: #2a3251;
+      padding: 40px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      font-family: 'Open Sans', sans-serif;
+      position: relative;
+    }
+    #welcome-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: transparent;
+      border: none;
+      font-size: 28px;
+      color: #2a3251;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      font-weight: normal;
+    }
+    #welcome-modal-close:hover {
+      color: #000;
+    }
+    #welcome-modal-content h1 {
+      margin: 0 0 20px 0;
+      font-size: 22px;
+      font-weight: bold;
+      color: #2a3251;
+      text-align: center;
+    }
+    #welcome-modal-content p {
+      margin: 0 0 25px 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #2a3251;
+    }
+    #welcome-modal-button-container {
+      text-align: center;
+    }
+    #welcome-modal-content button.start-tour {
+      background: #2a3251;
+      color: #ffffff;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      display: inline-block;
+    }
+    #welcome-modal-content button.start-tour:hover {
+      background: #1a1f35;
+    }
+  </style>
+</head>
+<body>
+  <div id="welcome-modal">
+    <div id="welcome-modal-content">
+      <button id="welcome-modal-close">&times;</button>
+      <h1>Little Cottonwood Canyon Virtual Gondola Tour</h1>
+      <p>This virtual tour showcases the 22 gondola towers approved by the Utah Department of Transportation (UDOT) for construction in Little Cottonwood Canyon. While the 3D renderings are conceptual and do not represent the final tower designs, the tower heights are accurate, offering a realistic sense of how the structures will appear within the landscape.</p>
+      <p>Click on a tower site to learn more about that location, or start the guided tour to visit each tower one by one as you take a virtual "drive" up the canyon.</p>
+      <div id="welcome-modal-button-container">
+        <button id="start-tour-modal-btn" class="start-tour">Start the Tour</button>
+      </div>
+    </div>
+  </div>
+  <div id="cesiumContainer">
+    <button id="change-viewpoint-btn">
+      <img src="https://lucashorns.github.io/gis/Towers/arrow-4-way.svg" alt="4-way arrows">
+      Explore View
+    </button>
+  </div>
+  <div id="tower-buttons"></div>
+  <div id="side-menu">
+    <img id="tower-image" src="https://lucashorns.github.io/gis/Towers/Tower1.png" alt="Tower Information">
+  </div>
+
+  <script>
+    // Your Cesium Ion access token (replace with your own or use the default)
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5YjdjYTI0Yy0zNGYzLTRhMTctOTgxMi0zNzg3NjkxMzZlNWUiLCJpZCI6MzUyNDUwLCJpYXQiOjE3NjEwMTA1ODh9.awMxAPL3EGh6US_AGZS1TEwhoY-zz6k77JAOXZYsfWU';
+
+    // Wrap everything in an async function to handle terrain loading
+    (async function() {
+
+    // Get references to viewport and side menu
+    const cesiumContainer = document.getElementById('cesiumContainer');
+    const sideMenu = document.getElementById('side-menu');
+    const towerImage = document.getElementById('tower-image');
+    const changeViewpointBtn = document.getElementById('change-viewpoint-btn');
+    const welcomeModal = document.getElementById('welcome-modal');
+    const startTourModalBtn = document.getElementById('start-tour-modal-btn');
+    const welcomeModalClose = document.getElementById('welcome-modal-close');
+
+    // Tower data: [longitude, latitude, height in meters (converted from feet)]
+    const towerData = [
+    { coords: [-111.7850277778, 40.57575], height: 80, name: "Tower 1", camera: { heading: 118, pitch: 9, distance: 194 } },
+  { coords: [-111.780167, 40.574361], height: 71, name: "Tower 2", camera: { heading: 107, pitch: 14, distance: 171 } },
+  { coords: [-111.7708333, 40.5723333], height: 40, name: "Tower 3", camera: { heading: 63, pitch: 15, distance: 151 } },
+  { coords: [-111.7623056, 40.5721667], height: 50, name: "Tower 4", camera: { heading: 83, pitch: 17, distance: 154 } },
+  { coords: [-111.7530000, 40.5720000], height: 60, name: "Tower 5", camera: { heading: 78, pitch: 14, distance: 182 } },
+  { coords: [-111.7429722, 40.5716667], height: 50, name: "Tower 6", camera: { heading: 64, pitch: 16, distance: 170 } },
+  { coords: [-111.7340556, 40.5713333], height: 50, name: "Tower 7", camera: { heading: 109, pitch: 6, distance: 180 } },
+  { coords: [-111.7275833, 40.5714444], height: 60, name: "Tower 8", camera: { heading: 103, pitch: 14, distance: 142 } },
+  { coords: [-111.7177778, 40.5710556], height: 60, name: "Tower 9", camera: { heading: 121, pitch: 4, distance: 149 } },
+  { coords: [-111.7096667, 40.5711389], height: 57, name: "Tower 10", camera: { heading: 83, pitch: 22, distance: 134 } },
+  { coords: [-111.7015833, 40.5714444], height: 40, name: "Tower 11", camera: { heading: 51, pitch: 13, distance: 140 } },
+  { coords: [-111.6920556, 40.5737500], height: 60, name: "Tower 12", camera: { heading: 119, pitch: 10, distance: 151 } },
+  { coords: [-111.6865278, 40.5751111], height: 60, name: "Tower 13", camera: { heading: 95, pitch: 14, distance: 161 } },
+  { coords: [-111.6787250, 40.5765528], height: 70, name: "Tower 14", camera: { heading: 63, pitch: 17, distance: 169 } },
+  { coords: [-111.6696944, 40.5785278], height: 70, name: "Tower 15", camera: { heading: 72, pitch: 19, distance: 156 } },
+  { coords: [-111.6606389, 40.5805000], height: 60, name: "Tower 16", camera: { heading: 151, pitch: 2, distance: 107 } },
+  { coords: [-111.6566667, 40.5814444], height: 50, name: "Tower 17", camera: { heading: 114, pitch: -1, distance: 209 } },
+  { coords: [-111.6499444, 40.5829444], height: 40, name: "Tower 18", camera: { heading: 35, pitch: 15, distance: 142 } },
+  { coords: [-111.6449444, 40.5845278], height: 40, name: "Tower 19", camera: { heading: 90, pitch: 5, distance: 287 } },
+  { coords: [-111.6431667, 40.5856111], height: 55, name: "Tower 20", camera: { heading: 114, pitch: 1, distance: 295 } },
+  { coords: [-111.6407083, 40.5872778], height: 70, name: "Tower 21", camera: { heading: 158, pitch: 10, distance: 164 } },
+  { coords: [-111.6357222, 40.5893333], height: 40, name: "Tower 22", camera: { heading: 56, pitch: 11, distance: 141 } }
+    ];
+
+    // Load terrain provider using the new async API
+    console.log('Loading Cesium World Terrain...');
+    const terrain = await Cesium.CesiumTerrainProvider.fromIonAssetId(1, {
+      requestVertexNormals: true,
+      requestWaterMask: true
+    });
+    console.log('✓ Terrain loaded successfully!');
+
+    // Initialize the Cesium Viewer with the terrain
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrainProvider: terrain,
+      baseLayerPicker: false,
+      geocoder: false,
+      homeButton: false,
+      sceneModePicker: false,
+      navigationHelpButton: false,
+      animation: false,
+      timeline: false,
+      fullscreenButton: true,
+      vrButton: false,
+      infoBox: false,
+      selectionIndicator: false
+    });
+    
+    // Enable depth testing
+    viewer.scene.globe.depthTestAgainstTerrain = true;
+    
+    // LIGHTING SETTINGS - Check current state
+    console.log('🌞 LIGHTING SETTINGS:');
+    console.log('- Globe lighting enabled:', viewer.scene.globe.enableLighting);
+    console.log('- Sun visible:', viewer.scene.sun.show);
+    console.log('- Moon visible:', viewer.scene.moon.show);
+    console.log('- Sky atmosphere visible:', viewer.scene.skyAtmosphere.show);
+    console.log('- Current viewer time:', viewer.clock.currentTime.toString());
+    
+    // Disable realistic sun lighting for consistent bright appearance
+    viewer.scene.globe.enableLighting = false;
+    
+    console.log('✓ Viewer initialized with Cesium World Terrain');
+    console.log('Imagery layers count:', viewer.imageryLayers.length);
+
+    // Function to create a lattice tower structure
+    function createTower(lng, lat, terrainHeight, height, name, index) {
+      const baseWidth = 9.0; // Base width in meters (100% wider)
+      const topWidth = 4.5; // Top width in meters (100% wider)
+      const towerHeight = height; // Actual tower height
+      const legRadius = 0.3; // Thickness of tower legs
+      
+      // Log tower creation with height info
+      console.log(`🗼 ${name}: Height = ${height}m (${Math.round(height * 3.28084)} ft) | Base: ${baseWidth}m | Top: ${topWidth}m`);
+
+      // Calculate positions for 4 corner legs (tapered)
+      const corners = [
+        { x: 1, y: 1 },   // NE
+        { x: -1, y: 1 },  // NW
+        { x: -1, y: -1 }, // SW
+        { x: 1, y: -1 }   // SE
+      ];
+
+      // Create 4 tapered legs
+      corners.forEach((corner, i) => {
+        const baseOffset = (baseWidth / 2) * corner.x;
+        const topOffset = (topWidth / 2) * corner.x;
+        const baseOffsetY = (baseWidth / 2) * corner.y;
+        const topOffsetY = (topWidth / 2) * corner.y;
+        
+        // Each leg as a thin cylinder
+        viewer.entities.add({
+          name: `${name} - Leg ${i + 1}`,
+          polyline: {
+            positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+              lng + baseOffset * 0.00001, lat + baseOffsetY * 0.00001, terrainHeight,
+              lng + topOffset * 0.00001, lat + topOffsetY * 0.00001, terrainHeight + towerHeight
+            ]),
+            width: 3,
+            material: Cesium.Color.LIGHTGRAY
+          }
+        });
+      });
+
+      // Add cross-bracing (X pattern on each side)
+      // Adjusted for reduced tower heights: ~2 levels for shortest (40m), ~4 levels for tallest (80m)
+      const numLevels = Math.max(2, Math.floor(towerHeight / 20));
+      for (let level = 0; level < numLevels; level++) {
+        const z1 = terrainHeight + (towerHeight / numLevels) * level;
+        const z2 = terrainHeight + (towerHeight / numLevels) * (level + 1);
+        const w1 = baseWidth - (baseWidth - topWidth) * (level / numLevels);
+        const w2 = baseWidth - (baseWidth - topWidth) * ((level + 1) / numLevels);
+        
+        // X-bracing on 4 sides
+        const braceSides = [
+          [[1, 1], [1, -1]],   // East face
+          [[1, -1], [-1, -1]], // South face
+          [[-1, -1], [-1, 1]], // West face
+          [[-1, 1], [1, 1]]    // North face
+        ];
+        
+        braceSides.forEach(side => {
+          // Diagonal 1
+          viewer.entities.add({
+            polyline: {
+              positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+                lng + (w1/2 * side[0][0]) * 0.00001, lat + (w1/2 * side[0][1]) * 0.00001, z1,
+                lng + (w2/2 * side[1][0]) * 0.00001, lat + (w2/2 * side[1][1]) * 0.00001, z2
+              ]),
+              width: 2,
+              material: Cesium.Color.LIGHTGRAY.withAlpha(0.8)
+            }
+          });
+          
+          // Diagonal 2 (crossing)
+          viewer.entities.add({
+            polyline: {
+              positions: Cesium.Cartesian3.fromDegreesArrayHeights([
+                lng + (w1/2 * side[1][0]) * 0.00001, lat + (w1/2 * side[1][1]) * 0.00001, z1,
+                lng + (w2/2 * side[0][0]) * 0.00001, lat + (w2/2 * side[0][1]) * 0.00001, z2
+              ]),
+              width: 2,
+              material: Cesium.Color.LIGHTGRAY.withAlpha(0.8)
+            }
+          });
+        });
+      }
+
+      // Add platform at the top
+      const platformEntity = viewer.entities.add({
+        name: `${name} - Platform`,
+        position: Cesium.Cartesian3.fromDegrees(lng, lat, terrainHeight + towerHeight + 2),
+        ellipse: {
+          semiMinorAxis: topWidth * 1.5,
+          semiMajorAxis: topWidth * 1.5,
+          height: 3,
+          material: Cesium.Color.LIGHTGRAY.withAlpha(0.95),
+          outline: true,
+          outlineColor: Cesium.Color.GRAY,
+          outlineWidth: 2
+        }
+      });
+
+      // Main reference entity (invisible, for clicking)
+      const towerEntity = viewer.entities.add({
+        name: name,
+        position: Cesium.Cartesian3.fromDegrees(lng, lat, terrainHeight + towerHeight / 2),
+        description: `<p><strong>${name}</strong><br>Height: ${height}m (${Math.round(height * 3.28084)} ft)<br>Location: ${lat.toFixed(5)}°, ${lng.toFixed(5)}°</p>`,
+        point: {
+          pixelSize: 1,
+          color: Cesium.Color.TRANSPARENT
+        }
+      });
+
+      return towerEntity;
+    }
+
+    // Calculate center of all towers for initial view
+    const avgLng = towerData.reduce((sum, t) => sum + t.coords[0], 0) / towerData.length;
+    const avgLat = towerData.reduce((sum, t) => sum + t.coords[1], 0) / towerData.length;
+
+    // Add all towers to the scene
+    const towers = [];
+    
+    // First, sample all terrain heights
+    const terrainPositions = towerData.map(tower => 
+      Cesium.Cartographic.fromDegrees(tower.coords[0], tower.coords[1])
+    );
+    
+    // Sample terrain elevations FIRST (terrain is already loaded via await)
+    console.log('Sampling terrain for 22 towers...');
+    try {
+      const sampledPositions = await Cesium.sampleTerrainMostDetailed(viewer.terrainProvider, terrainPositions);
+      console.log('✓ Terrain sampled successfully!');
+      
+      // Now create towers with actual terrain heights
+      console.log('Creating towers with accurate terrain elevation...');
+      towerData.forEach((tower, index) => {
+        const terrainHeight = sampledPositions[index].height;
+        const towerEntity = createTower(
+          tower.coords[0],
+          tower.coords[1],
+          terrainHeight,
+          tower.height,
+          tower.name,
+          index
+        );
+        towers.push({ entity: towerEntity, data: tower, terrainHeight: terrainHeight });
+      });
+      
+      console.log('✓ All 22 towers created with actual terrain elevation!');
+      
+      // Create summary table of all tower heights
+      console.log('\n📊 TOWER HEIGHT SUMMARY:');
+      console.table(towerData.map((tower, i) => ({
+        'Tower': tower.name,
+        'Height (m)': tower.height,
+        'Height (ft)': Math.round(tower.height * 3.28084),
+        'Terrain Elev (m)': sampledPositions[i].height.toFixed(1),
+        'Location': `${tower.coords[1].toFixed(6)}, ${tower.coords[0].toFixed(6)}`
+      })));
+      
+    } catch (error) {
+      console.error('✗ Error sampling terrain:', error);
+      console.log('Creating towers with estimated terrain height of 2600m');
+      
+      // Fallback: create towers with estimated height
+      towerData.forEach((tower, index) => {
+        const estimatedHeight = 2600; // meters
+        const towerEntity = createTower(
+          tower.coords[0],
+          tower.coords[1],
+          estimatedHeight,
+          tower.height,
+          tower.name,
+          index
+        );
+        towers.push({ entity: towerEntity, data: tower, terrainHeight: estimatedHeight });
+      });
+    }
+
+    // Track current tower index
+    let currentTowerIndex = null;
+    
+    // Function to fly to a specific tower
+    function flyToTower(towerIndex, source) {
+      if (towers[towerIndex]) {
+        currentTowerIndex = towerIndex;
+        const cameraSettings = towerData[towerIndex].camera;
+        const tower = towers[towerIndex];
+        
+        console.log('===================');
+        console.log(`flyToTower called from: ${source || 'unknown'}`);
+        console.log(`Target tower: ${tower.data.name} (index ${towerIndex})`);
+        console.log(`Camera settings: heading=${cameraSettings.heading}°, pitch=${cameraSettings.pitch}°, distance=${cameraSettings.distance}m`);
+        
+        // Clear any existing tracking
+        viewer.trackedEntity = undefined;
+        
+        // Create offset object
+        const offsetObj = new Cesium.HeadingPitchRange(
+          Cesium.Math.toRadians(cameraSettings.heading),
+          Cesium.Math.toRadians(cameraSettings.pitch),
+          cameraSettings.distance
+        );
+        console.log(`Offset: heading=${Cesium.Math.toDegrees(offsetObj.heading).toFixed(1)}°, pitch=${Cesium.Math.toDegrees(offsetObj.pitch).toFixed(1)}°, range=${offsetObj.range.toFixed(1)}m`);
+        
+        // Use flyTo for animation and correct camera position
+        viewer.flyTo(tower.entity, {
+              duration: 2,
+          offset: offsetObj
+        }).then(() => {
+          console.log(`AFTER flyTo complete:`);
+          console.log(`  - camera heading: ${Cesium.Math.toDegrees(viewer.camera.heading).toFixed(1)}°`);
+          console.log(`  - camera pitch: ${Cesium.Math.toDegrees(viewer.camera.pitch).toFixed(1)}°`);
+          console.log(`  - camera height: ${viewer.camera.positionCartographic.height.toFixed(1)}m`);
+          
+          // Lock camera rotation/panning to simulate trackedEntity behavior
+          viewer.scene.screenSpaceCameraController.enableRotate = false;
+          viewer.scene.screenSpaceCameraController.enableTranslate = false;
+          viewer.scene.screenSpaceCameraController.enableZoom = true;
+          viewer.scene.screenSpaceCameraController.enableTilt = false;
+          viewer.scene.screenSpaceCameraController.enableLook = false;
+          
+          // Update tower image based on tower index (tower numbers are 1-based)
+          const towerNumber = towerIndex + 1;
+          towerImage.src = `https://lucashorns.github.io/gis/Towers/Tower${towerNumber}.png`;
+          console.log(`Sidebar image updated to: Tower${towerNumber}.png`);
+          
+          // Show side menu and shrink viewport
+          cesiumContainer.classList.add('with-sidebar');
+          sideMenu.classList.add('visible');
+          
+          // Force Cesium to resize to new container dimensions
+          setTimeout(() => {
+            viewer.resize();
+          }, 350); // Slightly after the CSS transition completes
+          
+          console.log('Camera controls locked (zoom only)');
+          updateOverviewButton();
+          
+          // Show navigation buttons when viewing a tower
+          navContainer.classList.add('visible');
+          
+          // Show change viewpoint button
+          changeViewpointBtn.classList.add('visible');
+        });
+      }
+    }
+    
+    // Create control buttons
+    const buttonContainer = document.getElementById('tower-buttons');
+    
+    // Overview/Tour button (changes based on current state)
+    const overviewButton = document.createElement('button');
+    overviewButton.className = 'tower-button';
+    
+    // Function to update button text and behavior
+    function updateOverviewButton() {
+      if (currentTowerIndex === null) {
+        // At overview - show "Start the Tour"
+        overviewButton.textContent = 'Start the Tour';
+        overviewButton.title = 'Fly to the first tower';
+        overviewButton.onclick = () => {
+          flyToTower(0, 'START_TOUR_BUTTON'); // Go to Tower 1
+        };
+      } else {
+        // Viewing a tower - show "Return to Overview"
+        overviewButton.textContent = 'Return to Overview';
+        overviewButton.title = 'Return to bird\'s-eye view of all towers';
+        overviewButton.onclick = () => {
+          currentTowerIndex = null;
+          viewer.trackedEntity = undefined;
+          
+          // Hide side menu and expand viewport
+          cesiumContainer.classList.remove('with-sidebar');
+          sideMenu.classList.remove('visible');
+          
+          // Hide navigation buttons in overview mode
+          navContainer.classList.remove('visible');
+          
+          // Hide change viewpoint button in overview mode
+          changeViewpointBtn.classList.remove('visible');
+          
+          // Force Cesium to resize to new container dimensions
+          setTimeout(() => {
+            viewer.resize();
+          }, 350);
+      
+      viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(avgLng, avgLat, 25000),
+        orientation: {
+              heading: Cesium.Math.toRadians(0),
+              pitch: Cesium.Math.toRadians(-90),
+          roll: 0.0
+        },
+            duration: 2,
+        complete: () => {
+              // Re-enable camera controls for overview mode
+              viewer.scene.screenSpaceCameraController.enableRotate = true;
+              viewer.scene.screenSpaceCameraController.enableTranslate = true;
+              viewer.scene.screenSpaceCameraController.enableZoom = true;
+              viewer.scene.screenSpaceCameraController.enableTilt = true;
+              viewer.scene.screenSpaceCameraController.enableLook = true;
+              updateOverviewButton(); // Update button after returning
+            }
+          });
+        };
+      }
+    }
+    
+    // Initialize button
+    updateOverviewButton();
+    buttonContainer.appendChild(overviewButton);
+    
+    // Navigation buttons container
+    const navContainer = document.createElement('div');
+    navContainer.className = 'nav-buttons';
+    
+    // Previous tower button
+    const prevButton = document.createElement('button');
+    prevButton.className = 'nav-button';
+    prevButton.textContent = '←';
+    prevButton.title = 'Previous tower';
+    prevButton.onclick = () => {
+      if (currentTowerIndex === null) {
+        flyToTower(0, 'PREV_BUTTON');
+      } else {
+        const prevIndex = (currentTowerIndex - 1 + towerData.length) % towerData.length;
+        flyToTower(prevIndex, 'PREV_BUTTON');
+      }
+    };
+    navContainer.appendChild(prevButton);
+    
+    // Next tower button
+    const nextButton = document.createElement('button');
+    nextButton.className = 'nav-button';
+    nextButton.textContent = '→';
+    nextButton.title = 'Next tower';
+    nextButton.onclick = () => {
+      if (currentTowerIndex === null) {
+        flyToTower(0, 'NEXT_BUTTON');
+      } else {
+        const nextIndex = (currentTowerIndex + 1) % towerData.length;
+        flyToTower(nextIndex, 'NEXT_BUTTON');
+      }
+    };
+    navContainer.appendChild(nextButton);
+    
+    buttonContainer.appendChild(navContainer);
+
+    // Change Viewpoint button click handler
+    changeViewpointBtn.onclick = () => {
+      if (currentTowerIndex !== null && towers[currentTowerIndex]) {
+        const tower = towers[currentTowerIndex];
+        
+        // Enable tracking mode - allows rotation around tower
+        viewer.trackedEntity = tower.entity;
+        
+        // Re-enable camera controls for rotation/panning
+        viewer.scene.screenSpaceCameraController.enableRotate = true;
+        viewer.scene.screenSpaceCameraController.enableTranslate = true;
+        viewer.scene.screenSpaceCameraController.enableZoom = true;
+        viewer.scene.screenSpaceCameraController.enableTilt = true;
+        viewer.scene.screenSpaceCameraController.enableLook = true;
+        
+        // Hide the button after enabling tracking
+        changeViewpointBtn.classList.remove('visible');
+        
+        console.log(`Tracking mode enabled for ${tower.data.name} - you can now rotate around the tower`);
+      }
+    };
+
+    // Welcome modal button handlers
+    startTourModalBtn.onclick = () => {
+      // Hide the modal
+      welcomeModal.classList.add('hidden');
+      
+      // Start the tour (same as clicking the "Start the Tour" button)
+      flyToTower(0, 'START_TOUR_BUTTON');
+    };
+    
+    welcomeModalClose.onclick = () => {
+      // Just hide the modal without starting the tour
+      welcomeModal.classList.add('hidden');
+    };
+
+    // Add clickable marker dots at each tower location (visible from bird's eye view)
+    const markerDots = [];
+    towerData.forEach((tower, index) => {
+      const markerDot = viewer.entities.add({
+        name: `${tower.name} - Marker`,
+        position: Cesium.Cartesian3.fromDegrees(tower.coords[0], tower.coords[1], towers[index].terrainHeight), // At terrain height
+        point: {
+          pixelSize: 16,
+          color: Cesium.Color.fromCssColorString('#ffc845'),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 3,
+          disableDepthTestDistance: Number.POSITIVE_INFINITY // Always visible
+        },
+        description: `<p><strong>${tower.name}</strong><br>Click to fly to this tower</p>`,
+        towerIndex: index // Store index for click handler
+      });
+      markerDots.push(markerDot);
+    });
+
+    // Handle clicks and hover effects on marker dots
+    const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    let hoveredEntity = null;
+    
+    // Handle mouse movement for hover effects
+    handler.setInputAction((movement) => {
+      const pickedObject = viewer.scene.pick(movement.endPosition);
+      
+      // Reset previous hover state
+      if (hoveredEntity && hoveredEntity.point) {
+        hoveredEntity.point.pixelSize = 16;
+        viewer.canvas.style.cursor = 'default';
+      }
+      hoveredEntity = null;
+      
+      // Apply hover state to new entity
+      if (Cesium.defined(pickedObject) && Cesium.defined(pickedObject.id)) {
+        const entity = pickedObject.id;
+        if (entity.towerIndex !== undefined && entity.point) {
+          hoveredEntity = entity;
+          entity.point.pixelSize = 24; // Larger on hover
+          viewer.canvas.style.cursor = 'pointer';
+        }
+      }
+    }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+    
+    // Handle clicks on marker dots
+    handler.setInputAction((click) => {
+      const pickedObject = viewer.scene.pick(click.position);
+      if (Cesium.defined(pickedObject) && Cesium.defined(pickedObject.id)) {
+        const entity = pickedObject.id;
+        if (entity.towerIndex !== undefined) {
+          const towerIndex = entity.towerIndex;
+          
+          console.log(`>>> DOT CLICKED - Entity: ${entity.name}, Tower Index: ${towerIndex}`);
+          
+          // CRITICAL: Clear selectedEntity immediately to prevent Cesium from using the marker dot
+          viewer.selectedEntity = undefined;
+          
+          // Call flyToTower
+          flyToTower(towerIndex, 'DOT_CLICK');
+        }
+      }
+    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    // Update marker dot opacity based on camera altitude/zoom level
+    function updateMarkerOpacity() {
+      const cameraHeight = viewer.camera.positionCartographic.height;
+      
+      // Define altitude thresholds for opacity fade
+      const highAltitude = 3000;  // Full opacity (bird's eye view)
+      const lowAltitude = 2900;    // Start fading out
+      const minAltitude = 2800;     // Completely invisible
+      
+      let opacity;
+      if (cameraHeight >= highAltitude) {
+        opacity = 1.0; // Full opacity
+      } else if (cameraHeight <= minAltitude) {
+        opacity = 0.0; // Invisible
+      } else if (cameraHeight > lowAltitude) {
+        // Fade from 1.0 to 0.5 between highAltitude and lowAltitude
+        opacity = 0.5 + 0.5 * ((cameraHeight - lowAltitude) / (highAltitude - lowAltitude));
+      } else {
+        // Fade from 0.5 to 0.0 between lowAltitude and minAltitude
+        opacity = 0.5 * ((cameraHeight - minAltitude) / (lowAltitude - minAltitude));
+      }
+      
+      // Update all marker dots
+      markerDots.forEach(marker => {
+        if (marker.point) {
+          marker.point.color = Cesium.Color.fromCssColorString('#ffc845').withAlpha(opacity);
+          marker.point.outlineColor = Cesium.Color.WHITE.withAlpha(opacity);
+        }
+      });
+    }
+    
+    // Call on camera movement
+    viewer.camera.moveEnd.addEventListener(updateMarkerOpacity);
+    
+    // Initial call
+    updateMarkerOpacity();
+    // Set initial camera view - bird's eye view looking straight down
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(avgLng, avgLat, 25000), // Higher altitude to see all towers
+      orientation: {
+        heading: Cesium.Math.toRadians(0),
+        pitch: Cesium.Math.toRadians(-90), // Looking straight down
+        roll: 0.0
+      },
+      duration: 2
+    });
+    
+    console.log(`Initial camera position: ${avgLng}, ${avgLat}, 25000m (Bird's Eye View)`);
+
+    // Add cable line after terrain is sampled
+    Cesium.sampleTerrainMostDetailed(viewer.terrainProvider, terrainPositions).then((sampledPositions) => {
+      const cartesianPositions = sampledPositions.map((pos, index) => 
+        Cesium.Cartesian3.fromRadians(
+          pos.longitude,
+          pos.latitude,
+          pos.height + towerData[index].height
+        )
+      );
+
+      viewer.entities.add({
+        name: 'Gondola Cable',
+        polyline: {
+          positions: cartesianPositions,
+          width: 2,
+          material: new Cesium.PolylineOutlineMaterial({
+            color: Cesium.Color.LIGHTGRAY.withAlpha(0.7),
+            outlineColor: Cesium.Color.GRAY.withAlpha(0.5),
+            outlineWidth: 1
+          }),
+          clampToGround: false
+        }
+      });
+      
+      console.log('Cable line added');
+    });
+
+    console.log('CesiumJS Gondola Visualization Loaded!');
+    console.log(`${towerData.length} tower data entries`);
+    console.log(`Total entities in scene: ${viewer.entities.values.length}`);
+
+    })(); // End of async function
+  </script>
+</body>
+</html>
+
