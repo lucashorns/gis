@@ -464,6 +464,12 @@
     const welcomeModal = document.getElementById('welcome-modal');
     const startTourModalBtn = document.getElementById('start-tour-modal-btn');
     const welcomeModalClose = document.getElementById('welcome-modal-close');
+    
+    // Initialize side menu position for Safari mobile
+    if (window.innerWidth < 500) {
+      const actualViewportHeight = window.innerHeight;
+      sideMenu.style.setProperty('top', `${actualViewportHeight}px`, 'important');
+    }
 
     // Tower data: [longitude, latitude, height in meters (converted from feet)]
     const towerData = [
@@ -760,6 +766,12 @@
           cesiumContainer.classList.add('with-sidebar');
           sideMenu.classList.add('visible');
           
+          // Fix Safari mobile viewport issue - use actual viewport height
+          if (window.innerWidth < 500) {
+            const actualViewportHeight = window.innerHeight;
+            sideMenu.style.setProperty('top', `${actualViewportHeight - 100}px`, 'important');
+          }
+          
           // Force Cesium to resize to new container dimensions
           setTimeout(() => {
             viewer.resize();
@@ -817,6 +829,11 @@
           // Hide side menu and expand viewport
           cesiumContainer.classList.remove('with-sidebar');
           sideMenu.classList.remove('visible');
+          
+          // Reset inline style on mobile
+          if (window.innerWidth < 500) {
+            sideMenu.style.removeProperty('top');
+          }
           
           // Hide navigation buttons in overview mode
           navContainer.classList.remove('visible');
