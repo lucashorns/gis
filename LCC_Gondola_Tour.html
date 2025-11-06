@@ -928,6 +928,20 @@
         
         // Show explore instructions
         const exploreInstructions = document.getElementById('explore-instructions');
+        
+        // Update text based on mobile or desktop
+        if (window.innerWidth < 500) {
+          exploreInstructions.innerHTML = `
+            <div>Hold and swipe to pan.</div>
+            <div>Pinch to zoom.</div>
+          `;
+        } else {
+          exploreInstructions.innerHTML = `
+            <div>Click and drag to pan.</div>
+            <div>Scroll to zoom.</div>
+          `;
+        }
+        
         exploreInstructions.classList.remove('show'); // Reset animation
         void exploreInstructions.offsetWidth; // Force reflow
         exploreInstructions.classList.add('show');
