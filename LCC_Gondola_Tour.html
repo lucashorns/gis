@@ -94,6 +94,33 @@
       width: 100%;
       height: auto;
       display: block;
+      transition: opacity 0.2s ease;
+    }
+    #side-menu img.loading {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #image-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    #image-loader.hidden {
+      display: none;
+    }
+    .spinner {
+      border: 4px solid rgba(42, 50, 81, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid #2a3251;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     #change-viewpoint-btn {
       position: absolute;
@@ -425,7 +452,7 @@
     <div id="welcome-modal-content">
       <button id="welcome-modal-close">&times;</button>
       <h1>Little Cottonwood Canyon Virtual Gondola Tower Tour</h1>
-      <p>This virtual tour showcases the locations and heights of the 22 gondola towers approved by the Utah Department of Transportation (UDOT) for construction in Little Cottonwood Canyon.</p>
+      <p>This virtual tour showcases the locations and heights of the 22 gondola towers the Utah Department of Transportation (UDOT) is planning to construct in Little Cottonwood Canyon.</p>
       <p>While the 3D renderings are conceptual and do not represent the final tower designs, the tower heights are accurate, offering a realistic sense of how the structures will appear within the landscape. We relied on UDOT’s public plans, which is why our renderings do not include cables, cars, the two angle stations, the base station and stops at Snowbird and Alta resorts, as those details are not publicly available.</p>
       <p>Click on a tower site to learn more about that location, or start the guided tour to visit each tower one by one as you take a virtual "drive" up the canyon.</p>
       <div id="welcome-modal-button-container">
@@ -446,6 +473,9 @@
   <div id="scroll-indicator">^</div>
   <div id="tower-buttons"></div>
   <div id="side-menu">
+    <div id="image-loader" class="hidden">
+      <div class="spinner"></div>
+    </div>
     <img id="tower-image" src="https://lucashorns.github.io/gis/Towers/Tower1.png" alt="Tower Information">
   </div>
 
@@ -460,6 +490,7 @@
     const cesiumContainer = document.getElementById('cesiumContainer');
     const sideMenu = document.getElementById('side-menu');
     const towerImage = document.getElementById('tower-image');
+    const imageLoader = document.getElementById('image-loader');
     const changeViewpointBtn = document.getElementById('change-viewpoint-btn');
     const welcomeModal = document.getElementById('welcome-modal');
     const startTourModalBtn = document.getElementById('start-tour-modal-btn');
@@ -759,8 +790,28 @@
           
           // Update tower image based on tower index (tower numbers are 1-based)
           const towerNumber = towerIndex + 1;
-          towerImage.src = `https://lucashorns.github.io/gis/Towers/Tower${towerNumber}.png`;
-          console.log(`Sidebar image updated to: Tower${towerNumber}.png`);
+          
+          // Show loading spinner and hide current image
+          towerImage.classList.add('loading');
+          imageLoader.classList.remove('hidden');
+          
+          // Create a new image to preload
+          const newImage = new Image();
+          newImage.onload = () => {
+            // Once loaded, update the src and hide the loader
+            towerImage.src = newImage.src;
+            towerImage.classList.remove('loading');
+            imageLoader.classList.add('hidden');
+            console.log(`Sidebar image updated to: Tower${towerNumber}.png`);
+          };
+          newImage.onerror = () => {
+            // If image fails to load, still hide the loader
+            console.error(`Failed to load Tower${towerNumber}.png`);
+            imageLoader.classList.add('hidden');
+            towerImage.classList.remove('loading');
+          };
+          // Start loading the new image
+          newImage.src = `https://lucashorns.github.io/gis/Towers/Tower${towerNumber}.png`;
           
           // Show side menu and shrink viewport
           cesiumContainer.classList.add('with-sidebar');
